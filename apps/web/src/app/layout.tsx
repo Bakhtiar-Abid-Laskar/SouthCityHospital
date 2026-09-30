@@ -4,6 +4,9 @@ import "./globals.css";
 import { Providers } from "@/components/providers/Providers";
 import { SITE_URL } from "@/data/hospital";
 
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildHospitalSchema } from "@/lib/doctor-schema";
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -24,7 +27,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || SITE_URL),
   title: {
     default: "South City Hospital — Multi-Specialty Hospital in Silchar, Assam",
     template: "%s | South City Hospital",
@@ -108,6 +111,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const hospitalSchema = buildHospitalSchema();
+
   return (
     <html
       lang="en"
@@ -115,6 +120,7 @@ export default function RootLayout({
       className={`${inter.variable} ${playfair.variable} ${ibmPlexMono.variable}`}
     >
       <body>
+        <JsonLd data={hospitalSchema} />
         <Providers>{children}</Providers>
       </body>
     </html>

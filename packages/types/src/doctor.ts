@@ -69,12 +69,76 @@ export interface Doctor {
   photoUrl: string | null;
   active: boolean;
   biography?: string | null;
+  bio?: string | null;
   languages?: string[];
   registrationNumber: string;
   weeklySchedules?: DoctorWeeklySchedule[];
+  slug?: string;
+  expertise?: string[];
+  conditionsTreated?: string[];
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  isActive?: boolean;
+  isPublished?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export type DoctorFilterParams = {
   departmentSlug?: string;
   activeOnly?: boolean;
 };
+
+/**
+ * Generates an authoritative, crawlable SEO doctor slug:
+ * Format: dr-<first>-<last>-<specialty>-silchar
+ * Lowercase, hyphenated, ASCII only.
+ */
+export function generateDoctorSlug(
+  name: string,
+  departmentSlug: string,
+  existingSlugs: string[] = []
+): string {
+  let cleanName = name
+    .replace(/^(dr\.|dr|doctor|prof\.|prof)\s+/gi, "")
+    .replace(/^(dr\.|dr|doctor|prof\.|prof)\s+/gi, "")
+    .trim();
+
+  const nameSlug = cleanName
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  const specialtySlug = (departmentSlug || "general")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  const baseSlug = `dr-${nameSlug}-${specialtySlug}-silchar`;
+
+  if (!existingSlugs.includes(baseSlug)) {
+    return baseSlug;
+  }
+
+  let counter = 2;
+  while (existingSlugs.includes(`${baseSlug}-${counter}`)) {
+    counter++;
+  }
+  return `${baseSlug}-${counter}`;
+}
+
+/**
+ * Validates whether a registration number is legitimate medical registration data.
+ * Filters out placeholder values like "nil", "none", "pending", "n/a", etc.
+ */
+export function isValidRegistrationNumber(reg: string | null | undefined): boolean {
+  if (!reg) return false;
+  const trimmed = reg.trim().toLowerCase();
+  const invalidValues = ["nil", "null", "none", "pending", "n/a", "na", "0", "-", "--"];
+  if (invalidValues.includes(trimmed)) return false;
+  return trimmed.length >= 2;
+}

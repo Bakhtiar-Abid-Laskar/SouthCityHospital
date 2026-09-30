@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/data/hospital";
 import { departments } from "@/data/departments";
+import { getAllPublishedDoctors } from "@/lib/doctors";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = SITE_URL;
 
-  // List of all public, canonical, indexable static routes in South City Hospital web app
+  // 1. Static public indexable pages
   const staticRoutes: Array<{
     url: string;
     priority: number;
@@ -21,23 +22,38 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: "/faq", priority: 0.6, changeFrequency: "monthly" },
     { url: "/testimonials", priority: 0.6, changeFrequency: "monthly" },
     { url: "/gallery", priority: 0.5, changeFrequency: "monthly" },
-    { url: "/booking-status", priority: 0.5, changeFrequency: "monthly" },
     { url: "/privacy-policy", priority: 0.3, changeFrequency: "yearly" },
     { url: "/terms-of-service", priority: 0.3, changeFrequency: "yearly" },
   ];
 
-  const formattedStaticRoutes = staticRoutes.map((route) => ({
+  const formattedStaticRoutes: MetadataRoute.Sitemap = staticRoutes.map((route) => ({
     url: `${baseUrl}${route.url}`,
     changeFrequency: route.changeFrequency,
     priority: route.priority,
-    ...(route.lastModified ? { lastModified: route.lastModified } : {}),
+    lastModified: route.lastModified || new Date(),
   }));
 
-  const departmentRoutes = departments.map((dept) => ({
+  // 2. Department pages
+  const departmentRoutes: MetadataRoute.Sitemap = departments.map((dept) => ({
     url: `${baseUrl}/departments/${dept.slug}`,
-    changeFrequency: "monthly" as const,
+    changeFrequency: "monthly",
     priority: 0.8,
+    lastModified: new Date(),
   }));
 
-  return [...formattedStaticRoutes, ...departmentRoutes];
+  // 3. Dynamic published doctor profile pages
+  let doctorRoutes: MetadataRoute.Sitemap = [];
+  try {
+    const publishedDoctors = await getAllPublishedDoctors();
+    doctorRoutes = publishedDoctors.map((doc) => ({
+      url: `${baseUrl}/doctors/${doc.slug}`,
+      changeFrequency: "weekly",
+      priority: 0.8,
+      lastModified: doc.updatedAt ? new Date(doc.updatedAt) : new Date(),
+    }));
+  } catch (err) {
+    console.warn("Could not generate doctor sitemap entries:", err);
+  }
+
+  return [...formattedStaticRoutes, ...departmentRoutes, ...doctorRoutes];
 }

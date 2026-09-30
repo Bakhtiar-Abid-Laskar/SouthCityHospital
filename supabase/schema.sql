@@ -85,13 +85,22 @@ CREATE TABLE IF NOT EXISTS doctors (
   biography TEXT NULL,
   languages TEXT[] NOT NULL DEFAULT '{"English", "Bengali", "Hindi"}',
   registration_number TEXT NOT NULL,
+  slug TEXT UNIQUE,
+  expertise TEXT[] NOT NULL DEFAULT '{}',
+  seo_title TEXT NULL,
+  seo_description TEXT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- In case table already existed without languages column:
+-- In case table already existed without new columns:
 ALTER TABLE doctors ADD COLUMN IF NOT EXISTS languages TEXT[] NOT NULL DEFAULT '{"English", "Bengali", "Hindi"}';
 ALTER TABLE doctors ADD COLUMN IF NOT EXISTS registration_number TEXT NOT NULL DEFAULT 'PENDING';
+ALTER TABLE doctors ADD COLUMN IF NOT EXISTS slug TEXT UNIQUE;
+CREATE INDEX IF NOT EXISTS idx_doctors_slug ON doctors(slug);
+ALTER TABLE doctors ADD COLUMN IF NOT EXISTS expertise TEXT[] NOT NULL DEFAULT '{}';
+ALTER TABLE doctors ADD COLUMN IF NOT EXISTS seo_title TEXT NULL;
+ALTER TABLE doctors ADD COLUMN IF NOT EXISTS seo_description TEXT NULL;
 
 DROP TRIGGER IF EXISTS trigger_doctors_updated_at ON doctors;
 CREATE TRIGGER trigger_doctors_updated_at

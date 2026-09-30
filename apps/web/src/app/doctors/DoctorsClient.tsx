@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
+import { generateDoctorSlug, isValidRegistrationNumber } from "@/lib/slugs";
 import { CalendarCheck, UserRound, Stethoscope, BadgeCheck, Phone } from "lucide-react";
 import { useDoctors } from "@/services/doctors";
 import { departments } from "@/data/departments";
@@ -102,46 +104,63 @@ function DoctorSkeleton() {
 function DoctorCard({ doctor, onBook }: { doctor: Doctor; onBook: (doctor: Doctor) => void }) {
   const dept = departments.find((d) => d.slug === doctor.departmentSlug);
   const displayName = doctor.name.startsWith("Dr.") ? doctor.name : `Dr. ${doctor.name}`;
+  const slug = doctor.slug || generateDoctorSlug(doctor.name, doctor.departmentSlug);
+  const profileUrl = `/doctors/${slug}`;
+  const hasValidReg = isValidRegistrationNumber(doctor.registrationNumber);
 
   return (
     <StaggerItem
       variants={staggerItemVariants}
       className="card p-6 flex flex-col items-center text-center gap-4 border border-[var(--mist)] hover:border-[var(--primary)]/40 transition-all bg-white shadow-xs hover:shadow-md"
     >
-      {/* Avatar / Initials Frame */}
-      {doctor.photoUrl ? (
-        <div className="relative p-1 rounded-2xl bg-gradient-to-tr from-[var(--navy-950)] via-[var(--primary)] to-[var(--accent)] shadow-md mb-2">
-          <div
-            className="relative w-32 h-32 rounded-xl overflow-hidden"
-            style={{ background: "var(--primary-dark)" }}
-          >
-            <Image
-              src={doctor.photoUrl}
-              alt={displayName}
-              fill
-              className="object-cover"
-              sizes="128px"
-              priority={true}
-            />
+      {/* Avatar / Initials Frame (Clickable to doctor profile) */}
+      <Link
+        href={profileUrl}
+        className="block focus:outline-hidden focus:ring-2 focus:ring-[var(--primary)] rounded-2xl transition-transform hover:scale-[1.02]"
+        title={`View full profile and OPD schedule for ${displayName}`}
+      >
+        {doctor.photoUrl ? (
+          <div className="relative p-1 rounded-2xl bg-gradient-to-tr from-[var(--navy-950)] via-[var(--primary)] to-[var(--accent)] shadow-md mb-2">
+            <div
+              className="relative w-32 h-32 rounded-xl overflow-hidden"
+              style={{ background: "var(--primary-dark)" }}
+            >
+              <Image
+                src={doctor.photoUrl}
+                alt={`${displayName}, ${dept ? dept.name : "Specialist"} at South City Hospital, Silchar`}
+                fill
+                className="object-cover"
+                sizes="128px"
+                priority={true}
+              />
+            </div>
+            <div className="absolute bottom-[-6px] right-[-6px] z-20 bg-white rounded-full p-1 shadow-sm">
+              <BadgeCheck size={22} style={{ color: "var(--accent)", fill: "var(--navy-950)" }} aria-hidden="true" />
+            </div>
           </div>
-          <div className="absolute bottom-[-6px] right-[-6px] z-20 bg-white rounded-full p-1 shadow-sm">
-            <BadgeCheck size={22} style={{ color: "var(--accent)", fill: "var(--navy-950)" }} aria-hidden="true" />
+        ) : (
+          <div className="w-32 h-32 rounded-2xl bg-[var(--cloud)] border border-[var(--mist)] flex items-center justify-center shrink-0 mb-2 text-[var(--primary)] shadow-xs">
+            <Stethoscope size={48} aria-hidden="true" />
           </div>
-        </div>
-      ) : (
-        <div className="w-32 h-32 rounded-2xl bg-[var(--cloud)] border border-[var(--mist)] flex items-center justify-center shrink-0 mb-2 text-[var(--primary)] shadow-xs">
-          <Stethoscope size={48} aria-hidden="true" />
-        </div>
-      )}
+        )}
+      </Link>
 
       <div>
-        <h3 className="font-display font-semibold text-lg text-[var(--navy-950)]">{displayName}</h3>
+        <h3 className="font-display font-semibold text-lg text-[var(--navy-950)]">
+          <Link
+            href={profileUrl}
+            className="hover:text-[var(--primary)] transition-colors hover:underline"
+            title={`View profile of ${displayName}`}
+          >
+            {displayName}
+          </Link>
+        </h3>
         <p className="text-xs text-[var(--slate)] mt-0.5">{doctor.qualifications.join(", ")}</p>
         {doctor.experienceYears > 0 && (
           <p className="font-semibold text-xs mt-1.5 text-[var(--primary)]">{doctor.experienceYears} yrs experience</p>
         )}
-        {doctor.registrationNumber && (
-          <p className="text-[11px] font-medium text-[var(--slate)] mt-0.5">Reg. No: {doctor.registrationNumber}</p>
+        {hasValidReg && (
+          <p className="text-[11px] font-medium text-[var(--slate)] mt-0.5">Reg. No: {doctor.registrationNumber.trim()}</p>
         )}
       </div>
 

@@ -7,6 +7,8 @@ import {
   CalendarCheck, Phone, CheckCircle2, ChevronRight, ArrowRight,
   Clock, Activity, Sparkles, Building2, HelpCircle
 } from "lucide-react";
+import Image from "next/image";
+import { getDoctorsByDepartment } from "@/lib/doctors";
 import { departments } from "@/data/departments";
 import { departmentDetails } from "@/data/department-details";
 import { hospital } from "@/data/hospital";
@@ -67,6 +69,7 @@ export default async function DepartmentDetailPage({ params }: PageProps) {
 
   const Icon = iconMap[dept.icon] || Stethoscope;
   const otherDepartments = departments.filter((d) => d.slug !== slug).slice(0, 4);
+  const deptDoctors = await getDoctorsByDepartment(slug);
 
   return (
     <>
@@ -260,6 +263,66 @@ export default async function DepartmentDetailPage({ params }: PageProps) {
                   ))}
                 </div>
               </div>
+
+              {/* 3.5. Department Doctors / Faculty */}
+              {deptDoctors.length > 0 && (
+                <div className="pt-6 border-t border-[var(--mist)]">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Stethoscope size={16} className="text-[var(--primary)]" aria-hidden="true" />
+                    <p className="eyebrow text-[var(--primary)]">Specialist Faculty</p>
+                  </div>
+                  <h2 className="font-display text-display-sm text-[var(--navy-950)] mb-4">
+                    Specialist Doctors in {dept.name}
+                  </h2>
+                  <p className="text-xs sm:text-sm text-[var(--slate)] mb-6">
+                    Consult leading {dept.name.toLowerCase()} specialists at South City Hospital, Silchar. View detailed qualifications, consultation schedules, and book appointments.
+                  </p>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    {deptDoctors.map((doc) => {
+                      const displayName = doc.name.startsWith("Dr.") ? doc.name : `Dr. ${doc.name}`;
+                      return (
+                        <Link
+                          key={doc.id}
+                          href={`/doctors/${doc.slug}`}
+                          className="p-4 rounded-xl border border-[var(--mist)] bg-white hover:border-[var(--primary)] hover:shadow-xs transition-all flex items-center gap-3.5 group"
+                          title={`View profile of ${displayName} – ${dept.name} in Silchar`}
+                        >
+                          <div className="relative w-14 h-14 rounded-full overflow-hidden shrink-0 bg-[var(--primary-dark)] border border-[var(--mist)]">
+                            {doc.photoUrl ? (
+                              <Image
+                                src={doc.photoUrl}
+                                alt={`${displayName}, ${dept.name} at South City Hospital, Silchar`}
+                                width={56}
+                                height={56}
+                                sizes="56px"
+                                className="object-cover w-full h-full"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-[var(--accent)] bg-[var(--navy-950)]">
+                                <Stethoscope size={24} aria-hidden="true" />
+                              </div>
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="font-semibold text-sm text-[var(--navy-950)] group-hover:text-[var(--primary)] transition-colors truncate">
+                              {displayName}
+                            </p>
+                            <p className="text-xs text-[var(--slate)] truncate">
+                              {doc.qualifications.join(", ")}
+                            </p>
+                            {doc.experienceYears > 0 && (
+                              <p className="text-[11px] font-medium text-[var(--primary)] mt-0.5">
+                                {doc.experienceYears}+ years experience
+                              </p>
+                            )}
+                          </div>
+                          <ChevronRight size={16} className="text-[var(--slate)]/40 group-hover:text-[var(--primary)] group-hover:translate-x-0.5 transition-all shrink-0" aria-hidden="true" />
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
               {/* 4. When to Consult */}
               <div className="pt-6 border-t border-[var(--mist)]">

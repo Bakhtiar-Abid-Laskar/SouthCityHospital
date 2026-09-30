@@ -5,6 +5,8 @@ import Image from "next/image";
 import { ArrowRight, UserRound } from "lucide-react";
 import { ScrollReveal, StaggerReveal, StaggerItem } from "@/components/ui/motion";
 import { useDoctors } from "@/services/doctors";
+import { departments } from "@/data/departments";
+import { generateDoctorSlug } from "@/lib/slugs";
 
 /**
  * DoctorsHighlight — Home page section.
@@ -81,49 +83,61 @@ export function DoctorsHighlight() {
 
         {!isLoading && !isError && highlighted && highlighted.length > 0 && (
           <StaggerReveal className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {highlighted.map((doctor) => (
-              <StaggerItem key={doctor.id}>
-                <Link
-                  href="/doctors"
-                  className="card border border-[var(--mist)] p-6 flex flex-col items-center text-center gap-3 group h-full"
-                >
-                {/* Headshot */}
-                <div
-                  className="relative w-20 h-20 rounded-full overflow-hidden border-2 shrink-0"
-                  style={{ borderColor: "var(--mist)" }}
-                >
-                  {doctor.photoUrl ? (
-                    <Image
-                      src={doctor.photoUrl}
-                      alt={doctor.name}
-                      fill
-                      sizes="80px"
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div
-                      className="w-full h-full flex items-center justify-center"
-                      style={{ background: "var(--primary-light)" }}
-                    >
-                      <UserRound size={28} style={{ color: "var(--primary)" }} aria-hidden="true" />
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <h3
-                    className="font-display font-semibold text-base group-hover:text-[var(--primary)] transition-colors"
-                    style={{ color: "var(--ink)" }}
+            {highlighted.map((doctor) => {
+              const slug = doctor.slug || generateDoctorSlug(doctor.name, doctor.departmentSlug);
+              const dept = departments.find((d) => d.slug === doctor.departmentSlug);
+              const specialtyName = dept ? dept.name : doctor.departmentSlug;
+              const displayName = doctor.name.startsWith("Dr.") ? doctor.name : `Dr. ${doctor.name}`;
+
+              return (
+                <StaggerItem key={doctor.id}>
+                  <Link
+                    href={`/doctors/${slug}`}
+                    className="card border border-[var(--mist)] p-6 flex flex-col items-center text-center gap-3 group h-full hover:border-[var(--primary)] hover:shadow-md transition-all"
+                    title={`View profile of ${displayName} – ${specialtyName} Specialist in Silchar`}
                   >
-                    {doctor.name}
-                  </h3>
-                  <p className="text-xs mt-0.5" style={{ color: "var(--slate)" }}>
-                    {doctor.qualifications.join(", ")}
-                  </p>
-                </div>
-                <span className="chip chip-diagnostic">{doctor.departmentSlug}</span>
-                </Link>
-              </StaggerItem>
-            ))}
+                    {/* Headshot */}
+                    <div
+                      className="relative w-20 h-20 rounded-full overflow-hidden border-2 shrink-0 group-hover:scale-105 transition-transform"
+                      style={{ borderColor: "var(--mist)" }}
+                    >
+                      {doctor.photoUrl ? (
+                        <Image
+                          src={doctor.photoUrl}
+                          alt={`${displayName}, ${specialtyName} at South City Hospital, Silchar`}
+                          fill
+                          sizes="80px"
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div
+                          className="w-full h-full flex items-center justify-center"
+                          style={{ background: "var(--primary-light)" }}
+                        >
+                          <UserRound size={28} style={{ color: "var(--primary)" }} aria-hidden="true" />
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <h3
+                        className="font-display font-semibold text-base group-hover:text-[var(--primary)] transition-colors"
+                        style={{ color: "var(--ink)" }}
+                      >
+                        {displayName}
+                      </h3>
+                      <p className="text-xs mt-0.5" style={{ color: "var(--slate)" }}>
+                        {doctor.qualifications.join(", ")}
+                      </p>
+                    </div>
+                    <span className="chip chip-diagnostic text-[11px] py-0.5 px-2">{specialtyName}</span>
+                    <span className="text-[11px] font-semibold text-[var(--primary)] mt-auto pt-1 inline-flex items-center gap-1 group-hover:underline">
+                      <span>View Profile &amp; OPD Hours</span>
+                      <ArrowRight size={12} aria-hidden="true" />
+                    </span>
+                  </Link>
+                </StaggerItem>
+              );
+            })}
           </StaggerReveal>
         )}
       </div>

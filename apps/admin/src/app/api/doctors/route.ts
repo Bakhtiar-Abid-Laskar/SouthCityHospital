@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { requireAdmin } from "@/lib/auth/session";
 import type { Doctor } from "@sch/types";
+import { generateDoctorSlug } from "@sch/types";
 
 function getAnonSupabaseClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -82,7 +83,25 @@ export async function POST(request: Request) {
     const supabase = getServiceSupabaseClient();
     if (supabase) {
       try {
-        const { error } = await supabase.from("doctors").upsert({
+        // Retain existing slug if already published, or generate if missing
+        let doctorSlug = doctor.slug;
+        if (!doctorSlug) {
+          const { data: existing } = await supabase
+            .from("doctors")
+            .select("slug")
+            .eq("id", doctor.id)
+            .maybeSingle();
+
+          if (existing?.slug) {
+            doctorSlug = existing.slug;
+          } else {
+            const { data: allDocs } = await supabase.from("doctors").select("slug");
+            const existingSlugs = (allDocs || []).map((d: any) => d.slug).filter(Boolean);
+            doctorSlug = generateDoctorSlug(doctor.name, doctor.departmentSlug, existingSlugs);
+          }
+        }
+
+        const payload: any = {
           id: doctor.id,
           name: doctor.name,
           department_slug: doctor.departmentSlug,
@@ -93,12 +112,36 @@ export async function POST(request: Request) {
           consultation_schedule: doctor.consultationSchedule,
           languages: doctor.languages || ["English", "Bengali", "Hindi"],
           registration_number: doctor.registrationNumber,
-          biography: doctor.biography || null,
-        });
+          biography: doctor.biography || doctor.bio || null,
+        };
+
+        if (doctorSlug) {
+          payload.slug = doctorSlug;
+        }
+        if (doctor.expertise && doctor.expertise.length > 0) {
+          payload.expertise = doctor.expertise;
+        }
+        if (doctor.seoTitle) {
+          payload.seo_title = doctor.seoTitle;
+        }
+        if (doctor.seoDescription) {
+          payload.seo_description = doctor.seoDescription;
+        }
+
+        const { error } = await supabase.from("doctors").upsert(payload);
 
         if (error) {
           console.warn("Supabase upsert error:", error);
-          return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+          // If error is about missing 'slug' column in un-migrated DB, retry without slug
+          if (error.message?.includes("slug")) {
+            delete payload.slug;
+            delete payload.expertise;
+            delete payload.seo_title;
+            delete payload.seo_description;
+            await supabase.from("doctors").upsert(payload);
+          } else {
+            return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+          }
         }
 
       } catch (err) {

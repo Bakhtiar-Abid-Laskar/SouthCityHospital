@@ -49,6 +49,10 @@ export interface Database {
           languages: string[];
           created_at: string;
           updated_at: string;
+          slug?: string | null;
+          expertise?: string[] | null;
+          seo_title?: string | null;
+          seo_description?: string | null;
         };
         Insert: {
           id: string;
@@ -63,6 +67,10 @@ export interface Database {
           languages?: string[];
           created_at?: string;
           updated_at?: string;
+          slug?: string | null;
+          expertise?: string[] | null;
+          seo_title?: string | null;
+          seo_description?: string | null;
         };
         Update: {
           id?: string;
@@ -77,6 +85,10 @@ export interface Database {
           languages?: string[];
           created_at?: string;
           updated_at?: string;
+          slug?: string | null;
+          expertise?: string[] | null;
+          seo_title?: string | null;
+          seo_description?: string | null;
         };
       };
       doctor_weekly_schedules: {
