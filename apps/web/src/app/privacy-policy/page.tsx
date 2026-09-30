@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Shield, ChevronRight, Phone, Mail, ArrowLeft } from "lucide-react";
+import { Shield, ChevronRight, Phone, Mail } from "lucide-react";
 import { privacyPolicy } from "@/data/privacy";
 import { hospital } from "@/data/hospital";
 import { ScrollReveal, StaggerReveal, StaggerItem, staggerItemVariants } from "@/components/ui/motion";
@@ -8,7 +8,7 @@ import { FloatingBlobs, PulseLineWatermark } from "@/components/ui/svg-patterns"
 import { CtaBand } from "@/components/home/CtaBand";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy",
+  title: "Privacy & Patient Data Policy",
   description:
     "Learn how South City Hospital collects, protects, and retains patient data with enterprise encryption, Row-Level Security, and zero third-party data sharing.",
   alternates: {
@@ -42,7 +42,7 @@ export default function PrivacyPolicyPage() {
       </section>
 
       {/* ── Main Policy Content ── */}
-      <section className="py-[var(--section-y)] bg-[var(--cloud)]" aria-labelledby="policy-heading">
+      <section className="py-[var(--section-y)]" style={{ background: "var(--white)" }} aria-labelledby="policy-heading">
         <div className="container-site max-w-4xl">
           {/* Metadata Card */}
           <ScrollReveal className="card p-6 md:p-8 bg-white border border-[var(--mist)] rounded-2xl shadow-card mb-8">

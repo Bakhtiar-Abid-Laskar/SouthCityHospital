@@ -4,10 +4,20 @@ import { ReactNode } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { ReactQueryProvider } from "@/components/providers/ReactQueryProvider";
-import { CookieConsent } from "@/components/ui/CookieConsent";
 import { Phone, CalendarCheck } from "lucide-react";
 import { hospital } from "@/data/hospital";
+
+const CookieConsent = dynamic(
+  () => import("@/components/ui/CookieConsent").then((mod) => mod.CookieConsent),
+  { ssr: false }
+);
+
+const StayUpdatedModal = dynamic(
+  () => import("@/components/ui/StayUpdatedModal").then((mod) => mod.StayUpdatedModal),
+  { ssr: false }
+);
 
 function AppShell({ children }: { children: ReactNode }) {
   return (
@@ -50,6 +60,9 @@ function AppShell({ children }: { children: ReactNode }) {
 
       {/* Global Cookie & Privacy Notice */}
       <CookieConsent />
+
+      {/* Stay Updated registration popup */}
+      <StayUpdatedModal />
     </>
   );
 }

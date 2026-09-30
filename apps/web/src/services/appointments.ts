@@ -155,7 +155,7 @@ export async function createBooking(input: CreateBookingInput): Promise<BookingR
     preferredDate: input.preferredDate,
     preferredTimeSlot: input.preferredTimeSlot || null,
     message: input.message?.trim() || null,
-    status: "Confirmed",
+    status: "Pending",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
@@ -184,7 +184,7 @@ export async function lookupBooking(params: LookupBookingParams): Promise<Bookin
         p_patient_dob: params.patientDob || null,
       });
 
-      if (!error && data && data.success) {
+      if (!error && data) {
         return data as BookingResponse;
       }
     } catch (err) {

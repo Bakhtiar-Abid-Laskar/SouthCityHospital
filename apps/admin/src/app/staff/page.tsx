@@ -8,12 +8,6 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { AdminLayout } from "@/components/AdminLayout";
-import {
-  listStaffAccounts,
-  createStaffAccount,
-  toggleStaffActive,
-  resetStaffPassword,
-} from "@/services/admin-auth";
 import type { StaffAccount, UserRole } from "@sch/types";
 
 export default function StaffManagementPage() {
@@ -33,8 +27,13 @@ export default function StaffManagementPage() {
   const loadAccounts = async () => {
     setIsLoading(true);
     try {
-      const data = await listStaffAccounts();
-      setAccounts(data);
+      const res = await fetch("/api/staff", { cache: "no-store" });
+      const data = await res.json();
+      if (data.success && Array.isArray(data.accounts)) {
+        setAccounts(data.accounts);
+      } else {
+        setAccounts([]);
+      }
     } catch {
       setAccounts([]);
     } finally {
@@ -62,38 +61,56 @@ export default function StaffManagementPage() {
     e.preventDefault();
     setFeedback(null);
 
-    const res = await createStaffAccount({
-      email: newEmail,
-      fullName: newName,
-      role: newRole,
-      password: newPassword,
-    });
+    try {
+      const res = await fetch("/api/staff", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: newEmail,
+          fullName: newName,
+          role: newRole,
+          password: newPassword,
+        }),
+      });
+      const data = await res.json();
 
-    if (!res.success) {
-      setFeedback({ type: "error", message: res.error || "Failed to create account." });
-      return;
+      if (!res.ok || !data.success) {
+        setFeedback({ type: "error", message: data.error || "Failed to create account." });
+        return;
+      }
+
+      setFeedback({ type: "success", message: `Account created successfully for ${data.account?.fullName || newName}.` });
+      setShowCreateModal(false);
+      setNewEmail("");
+      setNewName("");
+      setNewPassword("");
+      loadAccounts();
+    } catch {
+      setFeedback({ type: "error", message: "Network error creating account." });
     }
-
-    setFeedback({ type: "success", message: `Account created successfully for ${res.account?.fullName}.` });
-    setShowCreateModal(false);
-    setNewEmail("");
-    setNewName("");
-    setNewPassword("");
-    loadAccounts();
   };
 
   const handleToggleActive = async (account: StaffAccount) => {
     setFeedback(null);
-    const res = await toggleStaffActive(account.id);
-    if (!res.success) {
-      setFeedback({ type: "error", message: res.error || "Failed to update account status." });
-      return;
+    try {
+      const res = await fetch("/api/staff", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ accountId: account.id }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setFeedback({ type: "error", message: data.error || "Failed to update account status." });
+        return;
+      }
+      setFeedback({
+        type: "success",
+        message: `Account for ${account.fullName} has been ${account.isActive ? "deactivated" : "reactivated"}.`,
+      });
+      loadAccounts();
+    } catch {
+      setFeedback({ type: "error", message: "Network error updating account status." });
     }
-    setFeedback({
-      type: "success",
-      message: `Account for ${account.fullName} has been ${account.isActive ? "deactivated" : "reactivated"}.`,
-    });
-    loadAccounts();
   };
 
   const handleResetPassword = async (e: React.FormEvent) => {
@@ -101,15 +118,27 @@ export default function StaffManagementPage() {
     if (!resetModalAccount) return;
     setFeedback(null);
 
-    const res = await resetStaffPassword(resetModalAccount.id, resetPasswordVal);
-    if (!res.success) {
-      setFeedback({ type: "error", message: res.error || "Failed to reset password." });
-      return;
-    }
+    try {
+      const res = await fetch("/api/staff", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          accountId: resetModalAccount.id,
+          newPassword: resetPasswordVal,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setFeedback({ type: "error", message: data.error || "Failed to reset password." });
+        return;
+      }
 
-    setFeedback({ type: "success", message: `Password reset successfully for ${resetModalAccount.fullName}.` });
-    setResetModalAccount(null);
-    setResetPasswordVal("");
+      setFeedback({ type: "success", message: `Password reset successfully for ${resetModalAccount.fullName}.` });
+      setResetModalAccount(null);
+      setResetPasswordVal("");
+    } catch {
+      setFeedback({ type: "error", message: "Network error resetting password." });
+    }
   };
 
   if (currentRole !== "admin") {

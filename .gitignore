@@ -39,4 +39,10 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+*.tsbuildinfo
+
+# Test downloads & generated exports
+*.xlsx
+*.pdf
+
 

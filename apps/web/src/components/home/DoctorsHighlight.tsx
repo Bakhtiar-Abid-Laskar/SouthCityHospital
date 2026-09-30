@@ -95,7 +95,7 @@ export function DoctorsHighlight() {
                   {doctor.photoUrl ? (
                     <Image
                       src={doctor.photoUrl}
-                      alt={`Photo of ${doctor.name}`}
+                      alt={doctor.name}
                       fill
                       sizes="80px"
                       className="object-cover"

@@ -11,9 +11,9 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Diagnostic & ICU Facilities in Silchar",
+  title: "Diagnostic & Emergency Facilities",
   description:
-    "24/7 diagnostic facilities in Silchar, Assam — Multi-Slice CT-Scan, ICU/CCU Critical Care, Echocardiography, Dialysis, Endoscopy, Digital X-Ray, and Pathology Lab.",
+    "Discover 24/7 diagnostic and critical care facilities at South City Hospital in Silchar, including Multi-Slice CT-Scan, ICU/CCU, Dialysis, and Pathology Lab.",
   alternates: {
     canonical: "https://southcityhospital.in/facilities",
   },
@@ -52,7 +52,7 @@ export default function FacilitiesPage() {
       </section>
 
       {/* Grouped Facilities */}
-      <section className="py-[var(--section-y)]" style={{ background: "var(--cloud)" }} aria-label="All facilities">
+      <section className="py-[var(--section-y)]" style={{ background: "var(--white)" }} aria-label="All facilities">
         <div className="container-site space-y-10 sm:space-y-14">
           {facilityCategories.map((category) => {
             const catFacilities = facilities.filter((f) => f.category === category);
@@ -61,7 +61,7 @@ export default function FacilitiesPage() {
 
             return (
               <div key={category} className="relative pl-3.5 sm:pl-6 md:pl-10 border-l-2" style={{ borderColor: style.bg }}>
-                <div className="absolute top-0 left-[-9px] w-4 h-4 rounded-full border-4 border-[var(--cloud)]" style={{ background: style.bg }} aria-hidden="true" />
+                <div className="absolute top-0 left-[-9px] w-4 h-4 rounded-full border-4 border-[var(--white)]" style={{ background: style.bg }} aria-hidden="true" />
                 <ScrollReveal className="mb-6 sm:mb-8">
                   <h2 className="font-display text-display-sm" style={{ color: "var(--blue-950)" }}>
                     {style.heading}

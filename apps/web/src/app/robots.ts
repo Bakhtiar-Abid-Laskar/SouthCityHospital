@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next";
+import { SITE_URL } from "@/data/hospital";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = "https://southcityhospital.in";
+  const baseUrl = SITE_URL;
 
   return {
     rules: [

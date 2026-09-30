@@ -4,7 +4,7 @@ import { DoctorsClient } from "./DoctorsClient";
 export const metadata: Metadata = {
   title: "Specialist Doctors in Silchar",
   description:
-    "Consult top medical specialists in Silchar across Cardiology, Neuro Surgery, Orthopaedics, Paediatrics, Gynaecology, Urology, and Nephrology. Book your appointment online.",
+    "Find and consult leading doctors at South City Hospital, Silchar across 13 clinical specialties. View schedules and book your consultation online today.",
   alternates: {
     canonical: "https://southcityhospital.in/doctors",
   },

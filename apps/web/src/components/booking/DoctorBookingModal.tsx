@@ -471,12 +471,12 @@ export function DoctorBookingModal({
               {isSubmitting ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  <span>Confirming Appointment...</span>
+                  <span>Submitting Request...</span>
                 </>
               ) : (
                 <>
                   <CalendarCheck size={18} />
-                  <span>Confirm Booking</span>
+                  <span>Submit Appointment Request</span>
                 </>
               )}
             </button>

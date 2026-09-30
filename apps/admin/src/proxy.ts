@@ -3,36 +3,60 @@ import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
 const ADMIN_SESSION_COOKIE = "sch_admin_session";
-const SECRET_KEY = process.env.JWT_SECRET_KEY || "super-secret-default-key-for-dev";
-const encodedKey = new TextEncoder().encode(SECRET_KEY);
+
+function getJwtSecretKey(): Uint8Array {
+  const secret = process.env.JWT_SECRET_KEY || process.env.ADMIN_SESSION_SECRET;
+
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(
+        "CRITICAL SECURITY CONFIGURATION ERROR: JWT_SECRET_KEY (or ADMIN_SESSION_SECRET) environment variable must be defined in production."
+      );
+    }
+    return new TextEncoder().encode("sch-dev-local-jwt-secret-key-32-chars-minimum");
+  }
+
+  return new TextEncoder().encode(secret);
+}
 
 export async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
   const sessionCookie = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
 
   if (!sessionCookie) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    const loginUrl = new URL("/login", request.url);
+    if (pathname && pathname !== "/") {
+      loginUrl.searchParams.set("from", pathname);
+    }
+    return NextResponse.redirect(loginUrl);
   }
 
   try {
+    const encodedKey = getJwtSecretKey();
     const { payload } = await jwtVerify(sessionCookie, encodedKey, {
       algorithms: ["HS256"],
     });
 
     const role = payload.role as string;
-    const pathname = request.nextUrl.pathname;
 
     // Staff cannot access admin-only routes
     if (role !== "admin") {
       const adminOnlyPaths = ["/dashboard", "/doctors", "/schedules", "/patients", "/staff"];
-      if (adminOnlyPaths.some(path => pathname.startsWith(path))) {
+      if (adminOnlyPaths.some((path) => pathname.startsWith(path))) {
         return NextResponse.redirect(new URL("/bookings", request.url));
       }
     }
 
     return NextResponse.next();
-  } catch (error) {
-    // Invalid or expired token
-    return NextResponse.redirect(new URL("/login", request.url));
+  } catch {
+    // Invalid or expired token: clear cookie and redirect to login
+    const loginUrl = new URL("/login", request.url);
+    if (pathname && pathname !== "/") {
+      loginUrl.searchParams.set("from", pathname);
+    }
+    const response = NextResponse.redirect(loginUrl);
+    response.cookies.delete(ADMIN_SESSION_COOKIE);
+    return response;
   }
 }
 
@@ -43,6 +67,8 @@ export const config = {
     "/schedules/:path*",
     "/patients/:path*",
     "/staff/:path*",
-    "/bookings/:path*"
+    "/bookings/:path*",
+    "/queries/:path*",
+    "/subscribers/:path*",
   ],
 };

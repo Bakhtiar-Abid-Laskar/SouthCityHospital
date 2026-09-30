@@ -103,7 +103,7 @@ export const departments: Department[] = [
   {
     id: "gynecology-and-obst",
     slug: "gynecology-and-obst",
-    name: "Gynecology and Obst",
+    name: "Gynecology and Obstetrics",
     shortDescription:
       "Women's healthcare, maternity services, and reproductive health care.",
     overview:
@@ -154,7 +154,7 @@ export const departments: Department[] = [
   {
     id: "cardiology",
     slug: "cardiology",
-    name: "Cardiology",
+    name: "Interventional Cardiology",
     shortDescription:
       "Heart health diagnostics, Holter monitoring, ECG, and critical cardiac care.",
     overview:

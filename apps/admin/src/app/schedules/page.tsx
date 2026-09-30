@@ -608,7 +608,7 @@ export default function AdminSchedulesPage() {
               <div className="space-y-2">
                 {doctorWeeklySchedules.length === 0 ? (
                   <div className="py-12 text-center text-xs text-[var(--slate)] bg-[var(--cloud)]/30 rounded-xl">
-                    No weekly recurring slots assigned. Default hospital OPD hours (09:00–17:00) will apply.
+                    No weekly recurring slots assigned. Default hospital 24x7 OPD availability will apply.
                   </div>
                 ) : (
                   doctorWeeklySchedules.map((slot) => (

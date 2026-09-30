@@ -1,4 +1,3 @@
-import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import type { Appointment } from "@sch/types";
 import { formatDisplayDate } from "./date-utils";
 import { hospital } from "@/data/hospital";
@@ -7,6 +6,7 @@ import { hospital } from "@/data/hospital";
  * Generates and triggers the download of a branded South City Hospital appointment PDF slip.
  */
 export async function downloadBookingSlipPdf(appointment: Appointment): Promise<void> {
+  const { PDFDocument, rgb, StandardFonts } = await import("pdf-lib");
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage([595.28, 841.89]); // A4 dimensions in points
   const { width, height } = page.getSize();
@@ -237,7 +237,7 @@ export async function downloadBookingSlipPdf(appointment: Appointment): Promise<
     color: navy,
   });
 
-  page.drawText(`South City Hospital  ·  ${hospital.location.address}  ·  support@southcityhospital.in`, {
+  page.drawText(`South City Hospital  ·  ${hospital.location.address}  ·  ${hospital.contact.email}`, {
     x: 40,
     y: 24,
     size: 9,

@@ -22,14 +22,14 @@ export const faqs: Faq[] = [
     question:
       "What clinical departments and diagnostic facilities are available?",
     answer:
-      "South City Hospital houses 11 specialized clinical departments (Internal Medicine, Orthopaedics, Neuro Surgery, Gynecology and Obst, Cardiology, Paediatrics, Nephrology, Urology, Laparoscopic Surgery, Endoscopic Surgery, Plastic Surgery) and 12 diagnostic/critical care units.",
+      "South City Hospital houses 11 specialized clinical departments (Internal Medicine, Orthopaedics, Neuro Surgery, Gynecology and Obstetrics, Interventional Cardiology, Paediatrics, Nephrology, Urology, Laparoscopic Surgery, Endoscopic Surgery, Plastic Surgery) and 12 diagnostic/critical care units.",
   },
   {
     id: "emergency-admission",
     question:
       "How do I confirm emergency admission or ambulance dispatch?",
     answer:
-      "Call our direct emergency helpline (+91 6901271223) or arrive directly at our ER desk in Meherpur, Silchar. Triage and critical stabilization begin immediately upon arrival.",
+      "Call our direct emergency helpline (+91 6901271223) or arrive directly at our Emergency Room desk in Meherpur, Silchar. Triage and critical stabilization begin immediately upon arrival.",
   },
   {
     id: "lab-results",

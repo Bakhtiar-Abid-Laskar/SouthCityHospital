@@ -182,7 +182,7 @@ export function ImageGallery({ images: propImages, className }: ImageGalleryProp
                   src={selectedImage.url}
                   alt={selectedImage.alt}
                   fill
-                  sizes="100vw"
+                  sizes="(max-width: 1280px) 100vw, 1200px"
                   className="object-contain"
                   priority
                 />

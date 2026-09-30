@@ -6,7 +6,6 @@ import {
   MapPin,
   Clock,
   Heart,
-  Globe,
 } from "lucide-react";
 import { InstagramIcon, FacebookIcon } from "@/components/icons/SocialIcons";
 import { hospital } from "@/data/hospital";
@@ -16,6 +15,7 @@ const QUICK_LINKS = [
   { href: "/about", label: "About Us" },
   { href: "/departments", label: "Departments" },
   { href: "/doctors", label: "Our Doctors" },
+  { href: "/booking-status", label: "Check Booking Status" },
   { href: "/facilities", label: "Facilities" },
   { href: "/gallery", label: "Photo Gallery" },
   { href: "/testimonials", label: "Testimonials" },
@@ -49,14 +49,15 @@ export function Footer() {
       </div>
 
       {/* ── Main Footer Content ── */}
+      <h2 className="sr-only">Footer Navigation and Hospital Information</h2>
       <ScrollReveal className="container-site py-14 relative z-10">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4 mb-8">
         {/* Hospital Info */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center gap-3">
             <Image
-              src="/logo.jpg"
-              alt="South City Hospital Logo"
+              src="/logo.webp"
+              alt="South City Hospital"
               width={48}
               height={48}
               className="rounded-lg object-cover w-12 h-12"
@@ -139,21 +140,23 @@ export function Footer() {
               href={hospital.social.instagram}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Visit our website"
-              className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl flex items-center justify-center transition-colors hover:bg-white/20"
-              style={{ background: "rgba(255,255,255,0.10)" }}
+              aria-label="Follow us on Instagram"
+              title={hospital.social.instagramHandle}
+              className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl flex items-center justify-center transition-all hover:scale-110"
+              style={{ background: "linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)" }}
             >
-              <Globe size={18} aria-hidden="true" />
+              <InstagramIcon size={18} aria-hidden="true" />
             </a>
             <a
               href={hospital.social.facebook}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Visit our portal"
-              className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl flex items-center justify-center transition-colors hover:bg-white/20"
-              style={{ background: "rgba(255,255,255,0.10)" }}
+              aria-label="Follow us on Facebook"
+              title={hospital.social.facebookHandle}
+              className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl flex items-center justify-center transition-all hover:scale-110"
+              style={{ background: "#1877F2" }}
             >
-              <Globe size={18} aria-hidden="true" />
+              <FacebookIcon size={18} aria-hidden="true" />
             </a>
           </div>
         </div>

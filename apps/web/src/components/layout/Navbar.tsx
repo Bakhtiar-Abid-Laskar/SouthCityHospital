@@ -3,12 +3,18 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Phone, Menu, X, ChevronRight, ShieldAlert } from "lucide-react";
+import { Phone, Menu, X, ChevronRight, ShieldAlert, Search } from "lucide-react";
+import dynamic from "next/dynamic";
 import { hospital } from "@/data/hospital";
 import { cn } from "@/lib/utils";
+
+const BookingStatusModal = dynamic(
+  () => import("@/components/booking/BookingStatusModal").then((mod) => mod.BookingStatusModal),
+  { ssr: false }
+);
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -25,19 +31,25 @@ const NAV_LINKS = [
 export function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  const [statusModalOpen, setStatusModalOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
-  // Close on route change
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
+  // Close drawer if route changes
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
+    if (mobileOpen) {
+      setMobileOpen(false);
+    }
+  }
 
   // Scroll shadow
   useEffect(() => {
@@ -101,7 +113,6 @@ export function Navbar() {
       {/* ── Emergency Bar ── */}
       <div
         className="flex items-center justify-between px-4 sm:px-8 py-2 text-white text-xs font-semibold bg-[#b83e28]"
-        role="banner"
         aria-label="Emergency contact"
       >
         <div className="hidden sm:block opacity-90 font-medium">
@@ -139,8 +150,8 @@ export function Navbar() {
             className="flex items-center gap-2 sm:gap-2.5 group shrink-0 min-w-0"
           >
             <Image
-              src="/logo.jpg"
-              alt="South City Hospital Logo"
+              src="/logo.webp"
+              alt="South City Hospital"
               width={40}
               height={40}
               className="rounded-lg object-cover w-9 h-9 sm:w-11 sm:h-11 shrink-0 shadow-xs"
@@ -189,10 +200,23 @@ export function Navbar() {
           </ul>
 
           {/* Desktop CTA */}
-          <div className="hidden lg:flex items-center shrink-0 ml-3 xl:ml-6">
+          <div className="hidden lg:flex items-center gap-2 shrink-0 ml-3 xl:ml-6">
+            <button
+              type="button"
+              onClick={() => setStatusModalOpen(true)}
+              className={cn(
+                "flex items-center gap-1.5 text-xs xl:text-sm py-2 px-3 rounded-lg font-semibold border transition-all duration-200 cursor-pointer",
+                scrolled 
+                  ? "border-[var(--mist)] text-[var(--slate)] hover:text-[var(--primary-dark)] hover:border-[var(--primary)] hover:bg-slate-50" 
+                  : "border-white/20 text-white/90 hover:text-white hover:border-white/40 hover:bg-white/10"
+              )}
+            >
+              <Search size={14} />
+              <span>Check Status</span>
+            </button>
             <Link
               href="/doctors"
-              className="btn btn-primary text-xs xl:text-sm py-2 px-4"
+              className="btn btn-primary text-xs xl:text-sm py-2 px-4 shadow-sm"
             >
               Book Appointment
             </Link>
@@ -271,8 +295,8 @@ export function Navbar() {
                   <div className="p-4 border-b flex items-center justify-between bg-white shrink-0" style={{ borderColor: "var(--mist)" }}>
                     <div className="flex items-center gap-2">
                       <Image
-                        src="/logo.jpg"
-                        alt="Logo"
+                        src="/logo.webp"
+                        alt="South City Hospital"
                         width={28}
                         height={28}
                         className="rounded-md object-cover"
@@ -330,6 +354,17 @@ export function Navbar() {
                     className="p-4 border-t space-y-2.5 bg-[var(--cloud)]/50 shrink-0"
                     style={{ borderColor: "var(--mist)" }}
                   >
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMobileOpen(false);
+                        setStatusModalOpen(true);
+                      }}
+                      className="btn btn-outline w-full text-center py-2.5 text-xs font-semibold flex items-center justify-center gap-1.5"
+                    >
+                      <Search size={14} />
+                      <span>Check Booking Status</span>
+                    </button>
                     <Link
                       href="/doctors"
                       onClick={() => setMobileOpen(false)}
@@ -342,7 +377,7 @@ export function Navbar() {
                       className="btn btn-emergency w-full text-center py-2 text-xs font-semibold whitespace-normal flex items-center justify-center gap-1.5"
                     >
                       <Phone size={14} aria-hidden="true" />
-                      <span>24/7 ER: {hospital.contact.emergency}</span>
+                      <span>24/7 Emergency Room: {hospital.contact.emergency}</span>
                     </a>
                   </div>
                 </motion.div>
@@ -350,6 +385,12 @@ export function Navbar() {
             )}
           </AnimatePresence>,
           document.body
+        )}
+        {statusModalOpen && (
+          <BookingStatusModal
+            isOpen={statusModalOpen}
+            onClose={() => setStatusModalOpen(false)}
+          />
         )}
       </nav>
     </header>

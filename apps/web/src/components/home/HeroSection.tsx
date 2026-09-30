@@ -23,10 +23,10 @@ export function HeroSection() {
     <section
       ref={containerRef}
       aria-label="Hero — South City Hospital"
-      className="relative overflow-hidden bg-premium-atmosphere min-h-auto lg:min-h-[90vh] flex items-center"
+      className="relative overflow-hidden bg-premium-atmosphere flex items-center"
     >
       <div className="noise-overlay" aria-hidden="true" />
-      {/* Background decoration for the blue area */}
+      {/* Background glow decoration for the blue area */}
       <div
         className="absolute inset-0 opacity-10 pointer-events-none z-0 lg:w-1/2"
         aria-hidden="true"
@@ -35,13 +35,13 @@ export function HeroSection() {
         }}
       />
 
-      {/* Grid pattern */}
+      {/* Subtle controlled dot pattern - behind content */}
       <div
-        className="absolute inset-0 opacity-[0.04] pointer-events-none z-0 lg:w-1/2"
+        className="absolute inset-0 opacity-[0.06] pointer-events-none z-0"
         aria-hidden="true"
         style={{
-          backgroundImage: `linear-gradient(var(--mist) 1px, transparent 1px), linear-gradient(90deg, var(--mist) 1px, transparent 1px)`,
-          backgroundSize: "48px 48px",
+          backgroundImage: "radial-gradient(circle at 1px 1px, var(--accent) 1px, transparent 0)",
+          backgroundSize: "24px 24px",
         }}
       />
 
@@ -55,10 +55,11 @@ export function HeroSection() {
       >
         <Image
           src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=1400&auto=format&fit=crop"
-          alt="South City Hospital corridor"
+          alt=""
+          aria-hidden="true"
           fill
           priority
-          sizes="100vw"
+          sizes="(max-width: 1023px) 100vw, 1px"
           className="object-cover object-center opacity-50"
         />
         {/* Soft tinted overlay to blend seamlessly with hospital brand blues */}
@@ -68,32 +69,33 @@ export function HeroSection() {
 
       {/* Desktop right-side full-bleed image with smooth horizontal fade mask */}
       <motion.div 
-        className="absolute inset-y-0 right-0 z-0 hidden lg:block lg:w-[60%]"
+        className="absolute inset-y-0 right-0 z-0 hidden lg:block lg:w-[55%]"
         style={{
           y: yParallax,
-          maskImage: "linear-gradient(to right, transparent 0%, black 25%, black 100%)",
-          WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 25%, black 100%)"
+          maskImage: "linear-gradient(to right, transparent 0%, black 20%, black 100%)",
+          WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 20%, black 100%)"
         }}
       >
         <Image
           src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=2000&auto=format&fit=crop"
-          alt="South City Hospital corridor"
+          alt=""
+          aria-hidden="true"
           fill
           priority
-          sizes="(min-width: 1024px) 60vw, 100vw"
+          sizes="(min-width: 1024px) 55vw, 1px"
           className="object-cover object-left"
         />
         <div className="absolute inset-0 bg-[var(--blue-950)]/10 mix-blend-multiply" />
       </motion.div>
 
-      <div className="container-site w-full pt-8 pb-12 sm:pt-14 sm:pb-16 lg:pt-24 lg:pb-20 relative z-10">
+      <div className="container-site w-full pt-10 pb-44 sm:pt-14 sm:pb-60 lg:pt-20 lg:pb-80 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* ── Left Column ── */}
           <motion.div
             variants={staggerContainerVariants}
             initial="hidden"
             animate="visible"
-            className="space-y-6"
+            className="space-y-5"
           >
             {/* Eyebrow */}
             <motion.div variants={staggerItemVariants} className="flex items-center gap-3">
@@ -150,14 +152,14 @@ export function HeroSection() {
                 className="btn btn-emergency gap-2 text-base px-6 py-3"
               >
                 <Phone size={18} aria-hidden="true" />
-                Call ER Now
+                Call Emergency Room Now
               </a>
             </motion.div>
 
             {/* Trust bar */}
             <motion.div
               variants={staggerItemVariants}
-              className="pt-6 mt-6 border-t border-white/10"
+              className="pt-5 mt-5 border-t border-white/10"
             >
               <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
                 {[
@@ -193,12 +195,21 @@ export function HeroSection() {
           <div className="relative hidden lg:block h-full w-full pointer-events-none" aria-hidden="true" />
         </div>
       </div>
-      {/* ── Smooth Bottom Fade ── */}
+
+      {/* ── Extended, eased bottom fade to white — smoothstep curve, not linear ── */}
       <div 
-        className="absolute inset-x-0 bottom-0 h-[120px] pointer-events-none z-10"
+        className="absolute inset-x-0 bottom-0 h-40 sm:h-56 lg:h-72 pointer-events-none z-10"
         style={{
-          background: "linear-gradient(to bottom, rgba(10,37,64,0) 0%, rgba(10,37,64,0.4) 30%, rgba(26,58,92,0.8) 60%, rgba(107,133,163,0.95) 85%, var(--page-bg, #ffffff) 100%)"
+          background: `linear-gradient(to bottom,
+            rgba(255,255,255,0) 0%,
+            rgba(255,255,255,0.10) 20%,
+            rgba(255,255,255,0.35) 40%,
+            rgba(255,255,255,0.65) 60%,
+            rgba(255,255,255,0.90) 80%,
+            var(--page-bg, #ffffff) 100%
+          )`
         }}
+        aria-hidden="true"
       />
     </section>
   );

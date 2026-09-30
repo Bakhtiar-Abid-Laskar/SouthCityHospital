@@ -14,13 +14,36 @@ export function CtaBand() {
       className="py-10 sm:py-16 relative overflow-hidden"
       style={{ background: "linear-gradient(135deg, var(--blue-800) 0%, var(--blue-600) 100%)" }}
     >
-      {/* ── Smooth Top Fade ── */}
+      {/* ── Dot Grid Top Fade Transition ── */}
       <div 
-        className="absolute inset-x-0 top-0 h-[80px] pointer-events-none z-0"
-        style={{
-          background: "linear-gradient(to bottom, var(--page-bg, #ffffff) 0%, rgba(204,222,235,1) 20%, rgba(128,168,204,1) 50%, rgba(67,126,179,1) 80%, rgba(18,52,86,0) 100%)"
-        }}
-      />
+        className="absolute inset-x-0 top-0 h-[120px] pointer-events-none z-0 overflow-hidden"
+        aria-hidden="true"
+      >
+        {/* Soft base fade into page background */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(to bottom,
+              var(--page-bg, #ffffff) 0%,
+              rgba(255,255,255,0.90) 20%,
+              rgba(255,255,255,0.65) 40%,
+              rgba(255,255,255,0.35) 60%,
+              rgba(255,255,255,0.10) 80%,
+              rgba(255,255,255,0) 100%
+            )`
+          }}
+        />
+        {/* High opacity small dots that dissolve smoothly into white */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: "radial-gradient(circle at 1.5px 1.5px, var(--blue-900) 1.5px, transparent 0)",
+            backgroundSize: "20px 20px",
+            maskImage: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 15%, rgba(0,0,0,0.85) 50%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,0) 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 15%, rgba(0,0,0,0.85) 50%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,0) 100%)",
+          }}
+        />
+      </div>
       <DotGrid className="opacity-10" />
       <div className="absolute top-0 right-0 w-1/2 h-full bg-[var(--blue-500)] blur-[100px] opacity-30 pointer-events-none" />
       <div className="container-site relative z-10">

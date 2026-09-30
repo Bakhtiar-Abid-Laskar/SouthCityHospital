@@ -7,44 +7,8 @@
 
 import { useQuery } from "@tanstack/react-query";
 import type { Doctor, DoctorFilterParams } from "@sch/types";
-import { createClient } from "@/lib/supabase/client";
 
 async function fetchDoctors(params: DoctorFilterParams = {}): Promise<Doctor[]> {
-  // 1. Try Supabase direct client if configured
-  const supabase = createClient();
-  if (supabase) {
-    try {
-      let query = supabase.from("doctors").select("*");
-
-      if (params.activeOnly !== false) {
-        query = query.eq("active", true);
-      }
-
-      if (params.departmentSlug && params.departmentSlug !== "all") {
-        query = query.eq("department_slug", params.departmentSlug);
-      }
-
-      const { data, error } = await query;
-
-      if (!error && data) {
-        return data.map((d: any) => ({
-          id: d.id,
-          name: d.name,
-          departmentSlug: d.department_slug,
-          qualifications: d.qualifications || [],
-          experienceYears: d.experience_years || 0,
-          consultationSchedule: d.consultation_schedule || [],
-          photoUrl: d.photo_url || null,
-          active: d.active ?? true,
-          biography: d.biography || null,
-          languages: d.languages || ["English", "Bengali", "Hindi"],
-          registrationNumber: d.registration_number || "PENDING",
-        }));
-      }
-    } catch (err) {
-      console.warn("Direct Supabase query failed, querying /api/doctors:", err);
-    }
-  }
 
   // 2. Fetch from backend API /api/doctors
   try {

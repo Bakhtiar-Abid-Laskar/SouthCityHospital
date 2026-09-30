@@ -42,7 +42,7 @@ export default function TermsOfServicePage() {
       </section>
 
       {/* ── Main Content ── */}
-      <section className="py-[var(--section-y)] bg-[var(--cloud)]" aria-labelledby="terms-heading">
+      <section className="py-[var(--section-y)]" style={{ background: "var(--white)" }} aria-labelledby="terms-heading">
         <div className="container-site max-w-4xl space-y-8">
           {/* ── Prominent Emergency Disclaimer Callout ── */}
           <ScrollReveal className="card p-6 md:p-8 bg-red-50 border-2 border-red-300 rounded-2xl shadow-card text-red-950">

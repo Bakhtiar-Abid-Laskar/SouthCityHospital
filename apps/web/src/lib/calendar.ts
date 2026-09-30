@@ -10,7 +10,7 @@ function getEventDates(dateStr: string, slotStr?: string | null): { startUtc: st
 
   let startHour = 10;
   let startMinute = 0;
-  let durationMinutes = 30;
+  const durationMinutes = 30;
 
   if (slotStr) {
     // Try to extract time like "09:00 AM" or "09:00" or "02:30 PM"

@@ -71,7 +71,7 @@ export const privacyPolicy = {
         "If you have questions regarding this Privacy Policy, your personal data, or our data handling practices, please contact our data governance desk:",
         "Hospital Administration, South City Hospital",
         "Meherpur, Silchar, Assam – 788015",
-        "Email: support@southcityhospital.in | Phone: +91 6901271223",
+        "Email: southcityhospital2014@gmail.com | Phone: +91 6901271223",
       ],
     },
   ],

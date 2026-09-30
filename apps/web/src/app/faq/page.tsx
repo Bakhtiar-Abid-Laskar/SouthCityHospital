@@ -4,7 +4,7 @@ import { FaqClient } from "./FaqClient";
 export const metadata: Metadata = {
   title: "Patient FAQs & Hospital Guide",
   description:
-    "Find answers to frequently asked questions about emergency admissions, doctor appointment booking, visiting hours, diagnostic reports, and medical departments in Silchar, Assam.",
+    "Find clear answers on doctor consultations, emergency care, diagnostic prep, visiting hours, and admission procedures at South City Hospital in Silchar.",
   alternates: {
     canonical: "https://southcityhospital.in/faq",
   },

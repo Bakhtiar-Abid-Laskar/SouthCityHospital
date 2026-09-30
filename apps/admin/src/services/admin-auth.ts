@@ -7,8 +7,6 @@ import type {
 import { createClient } from "@/lib/supabase/client";
 import { createAdminClient } from "@/lib/supabase/server";
 
-const LOCAL_STAFF_STORAGE_KEY = "sch_staff_accounts_store";
-
 function mapDbAccountToStaffAccount(dbRow: Record<string, any>): StaffAccount {
   return {
     id: dbRow.id,
@@ -21,30 +19,6 @@ function mapDbAccountToStaffAccount(dbRow: Record<string, any>): StaffAccount {
     updatedAt: dbRow.updated_at || dbRow.updatedAt || new Date().toISOString(),
     lastLoginAt: dbRow.last_login_at || dbRow.lastLoginAt || null,
   };
-}
-
-function getStoredStaffAccounts(): (StaffAccount & { passwordHash: string })[] {
-  if (typeof window === "undefined") {
-    return [];
-  }
-  try {
-    const raw = localStorage.getItem(LOCAL_STAFF_STORAGE_KEY);
-    if (!raw) {
-      return [];
-    }
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
-}
-
-function saveStoredStaffAccounts(accounts: (StaffAccount & { passwordHash: string })[]): void {
-  if (typeof window === "undefined") return;
-  try {
-    localStorage.setItem(LOCAL_STAFF_STORAGE_KEY, JSON.stringify(accounts));
-  } catch (err) {
-    console.error("Failed to persist staff accounts to localStorage:", err);
-  }
 }
 
 /**
@@ -164,43 +138,16 @@ export async function authenticateAdminUser(
       console.warn("Supabase RPC verify_staff_credentials fallback:", rpcErr);
     }
   }
-    // Tertiary plaintext comparison was removed here for security reasons.
-
-  // 4. Local storage fallback if Supabase is offline
-  const localAccounts = getStoredStaffAccounts();
-  const matchedLocal = localAccounts.find((a) => a.email.toLowerCase() === cleanEmail);
-
-  if (matchedLocal) {
-    if (!matchedLocal.isActive) {
-      return {
-        success: false,
-        error: "This staff account has been deactivated. Please contact an administrator.",
-      };
-    }
-
-    if (matchedLocal.passwordHash === cleanPass) {
-      matchedLocal.lastLoginAt = new Date().toISOString();
-      saveStoredStaffAccounts(localAccounts);
-
-      const session: AuthSession = {
-        id: matchedLocal.id,
-        email: matchedLocal.email,
-        fullName: matchedLocal.fullName,
-        role: matchedLocal.role,
-        expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
-      };
-      return { success: true, session };
-    }
-  }
 
   return { success: false, error: "Invalid email or password." };
 }
 
 /**
- * Lists all staff and admin accounts from Supabase (or local fallback).
+ * Lists all staff and admin accounts from Supabase.
  */
 export async function listStaffAccounts(): Promise<StaffAccount[]> {
-  const supabase = createClient();
+  const adminClient = createAdminClient();
+  const supabase = adminClient || createClient();
   if (supabase) {
     try {
       const { data, error } = await supabase
@@ -212,12 +159,11 @@ export async function listStaffAccounts(): Promise<StaffAccount[]> {
         return data.map(mapDbAccountToStaffAccount);
       }
     } catch (err) {
-      console.warn("Supabase listStaffAccounts fallback to local store:", err);
+      console.error("Supabase listStaffAccounts error:", err);
     }
   }
 
-  const local = getStoredStaffAccounts();
-  return local.map(({ passwordHash: _, ...safe }) => safe);
+  return [];
 }
 
 /**
@@ -235,79 +181,54 @@ export async function createStaffAccount(
     return { success: false, error: "All fields are required." };
   }
 
-  const supabase = createClient();
-  if (supabase) {
-    try {
-      const adminClient = createAdminClient();
-      if (adminClient) {
-        const { data: authData, error: authError } = await adminClient.auth.admin.createUser({
-          email: cleanEmail,
-          password: cleanPass,
-          email_confirm: true,
-          user_metadata: { full_name: cleanName, role: input.role }
-        });
+  const adminClient = createAdminClient();
+  if (!adminClient) {
+    return { success: false, error: "Database admin client is not configured on the server." };
+  }
 
-        if (authError) {
-          if (authError.message.includes("already exists")) {
-            return { success: false, error: "An account with this email address already exists." };
-          }
-          return { success: false, error: authError.message };
-        }
+  try {
+    const { data: authData, error: authError } = await adminClient.auth.admin.createUser({
+      email: cleanEmail,
+      password: cleanPass,
+      email_confirm: true,
+      user_metadata: { full_name: cleanName, role: input.role }
+    });
 
-        const authUserId = authData.user.id;
-
-        const { data, error } = await adminClient
-          .from("staff_accounts")
-          .insert({
-            id: authUserId,
-            email: cleanEmail,
-            full_name: cleanName,
-            role: input.role,
-            password_hash: "SUPABASE_AUTH_MANAGED",
-            is_active: true,
-            created_by: createdByAdminId || null,
-          })
-          .select()
-          .single();
-
-        if (!error && data) {
-          return { success: true, account: mapDbAccountToStaffAccount(data) };
-        } else if (error) {
-          await adminClient.auth.admin.deleteUser(authUserId);
-          return { success: false, error: error.message };
-        }
-      } else {
-        return { success: false, error: "Supabase admin client not configured." };
+    if (authError) {
+      if (authError.message.includes("already exists") || authError.message.includes("already registered")) {
+        return { success: false, error: "An account with this email address already exists." };
       }
-    } catch (err: any) {
-      console.warn("Supabase admin create user error:", err);
+      return { success: false, error: authError.message };
     }
+
+    const authUserId = authData.user.id;
+
+    const { data, error } = await adminClient
+      .from("staff_accounts")
+      .insert({
+        id: authUserId,
+        email: cleanEmail,
+        full_name: cleanName,
+        role: input.role,
+        password_hash: "SUPABASE_AUTH_MANAGED",
+        is_active: true,
+        created_by: createdByAdminId || null,
+      })
+      .select()
+      .single();
+
+    if (!error && data) {
+      return { success: true, account: mapDbAccountToStaffAccount(data) };
+    } else if (error) {
+      await adminClient.auth.admin.deleteUser(authUserId);
+      return { success: false, error: error.message };
+    }
+  } catch (err: any) {
+    console.error("Supabase admin create user error:", err);
+    return { success: false, error: err.message || "Failed to create staff account." };
   }
 
-  // Local fallback
-  const accounts = getStoredStaffAccounts();
-  if (accounts.some((a) => a.email.toLowerCase() === cleanEmail)) {
-    return { success: false, error: "An account with this email address already exists." };
-  }
-
-  const newAccount: StaffAccount & { passwordHash: string } = {
-    id: `staff-${Date.now()}`,
-    email: cleanEmail,
-    fullName: cleanName,
-    role: input.role,
-    isActive: true,
-    passwordHash: cleanPass,
-    createdBy: createdByAdminId || null,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    lastLoginAt: null,
-  };
-
-  accounts.push(newAccount);
-  saveStoredStaffAccounts(accounts);
-
-  const { passwordHash: _, ...safeAccount } = newAccount;
-  return { success: true, account: safeAccount };
+  return { success: false, error: "Failed to create staff account." };
 }
 
 /**
@@ -316,68 +237,51 @@ export async function createStaffAccount(
 export async function toggleStaffActive(
   accountId: string
 ): Promise<{ success: boolean; error?: string }> {
-  const supabase = createClient();
-  if (supabase) {
-    try {
-      const { data: target, error: fetchError } = await supabase
+  const adminClient = createAdminClient();
+  const supabase = adminClient || createClient();
+  if (!supabase) {
+    return { success: false, error: "Database client unavailable." };
+  }
+
+  try {
+    const { data: target, error: fetchError } = await supabase
+      .from("staff_accounts")
+      .select("*")
+      .eq("id", accountId)
+      .single();
+
+    if (fetchError || !target) {
+      return { success: false, error: fetchError?.message || "Account not found." };
+    }
+
+    if (target.role === "admin" && target.is_active) {
+      const { count } = await supabase
         .from("staff_accounts")
-        .select("*")
-        .eq("id", accountId)
-        .single();
+        .select("*", { count: "exact", head: true })
+        .eq("role", "admin")
+        .eq("is_active", true);
 
-      if (!fetchError && target) {
-        if (target.role === "admin" && target.is_active) {
-          const { count } = await supabase
-            .from("staff_accounts")
-            .select("*", { count: "exact", head: true })
-            .eq("role", "admin")
-            .eq("is_active", true);
-
-          if (count !== null && count <= 1) {
-            return {
-              success: false,
-              error: "Cannot deactivate the only active Administrator account in the system.",
-            };
-          }
-        }
-
-        const { error: updateError } = await supabase
-          .from("staff_accounts")
-          .update({ is_active: !target.is_active, updated_at: new Date().toISOString() })
-          .eq("id", accountId);
-
-        if (!updateError) {
-          return { success: true };
-        }
-        return { success: false, error: updateError.message };
+      if (count !== null && count <= 1) {
+        return {
+          success: false,
+          error: "Cannot deactivate the only active Administrator account in the system.",
+        };
       }
-    } catch (err: any) {
-      console.warn("Supabase toggleStaffActive fallback to local:", err);
     }
-  }
 
-  const accounts = getStoredStaffAccounts();
-  const target = accounts.find((a) => a.id === accountId);
+    const { error: updateError } = await supabase
+      .from("staff_accounts")
+      .update({ is_active: !target.is_active, updated_at: new Date().toISOString() })
+      .eq("id", accountId);
 
-  if (!target) {
-    return { success: false, error: "Account not found." };
-  }
-
-  if (target.role === "admin" && target.isActive) {
-    const activeAdmins = accounts.filter((a) => a.role === "admin" && a.isActive);
-    if (activeAdmins.length <= 1) {
-      return {
-        success: false,
-        error: "Cannot deactivate the only active Administrator account in the system.",
-      };
+    if (!updateError) {
+      return { success: true };
     }
+    return { success: false, error: updateError.message };
+  } catch (err: any) {
+    console.error("toggleStaffActive error:", err);
+    return { success: false, error: err.message || "Failed to toggle account status." };
   }
-
-  target.isActive = !target.isActive;
-  target.updatedAt = new Date().toISOString();
-  saveStoredStaffAccounts(accounts);
-
-  return { success: true };
 }
 
 /**
@@ -392,51 +296,38 @@ export async function resetStaffPassword(
     return { success: false, error: "Password cannot be empty." };
   }
 
-  const supabase = createClient();
-  if (supabase) {
-    try {
-      const adminClient = createAdminClient();
-      if (adminClient) {
-        const { data: authUser, error: authError } = await adminClient.auth.admin.updateUserById(accountId, {
-          password: cleanPass
-        });
-        
-        if (authError) {
-          const { data: rpcData, error: rpcError } = await adminClient.rpc("reset_staff_password", {
-            p_account_id: accountId,
-            p_new_password: cleanPass,
-          });
+  const adminClient = createAdminClient();
+  if (!adminClient) {
+    return { success: false, error: "Database admin client is not configured." };
+  }
 
-          if (!rpcError && rpcData?.success) {
-            return { success: true };
-          }
-          return { success: false, error: rpcError?.message || "Failed to reset password." };
-        } else {
-           await adminClient
-             .from("staff_accounts")
-             .update({
-               password_hash: "SUPABASE_AUTH_MANAGED",
-               updated_at: new Date().toISOString(),
-             })
-             .eq("id", accountId);
-           return { success: true };
-        }
+  try {
+    const { error: authError } = await adminClient.auth.admin.updateUserById(accountId, {
+      password: cleanPass
+    });
+    
+    if (authError) {
+      const { data: rpcData, error: rpcError } = await adminClient.rpc("reset_staff_password", {
+        p_account_id: accountId,
+        p_new_password: cleanPass,
+      });
+
+      if (!rpcError && rpcData?.success) {
+        return { success: true };
       }
-    } catch (err: any) {
-      console.warn("Supabase reset password error:", err);
+      return { success: false, error: rpcError?.message || authError.message || "Failed to reset password." };
+    } else {
+       await adminClient
+         .from("staff_accounts")
+         .update({
+           password_hash: "SUPABASE_AUTH_MANAGED",
+           updated_at: new Date().toISOString(),
+         })
+         .eq("id", accountId);
+       return { success: true };
     }
+  } catch (err: any) {
+    console.error("Supabase reset password error:", err);
+    return { success: false, error: err.message || "Failed to reset password." };
   }
-
-  const accounts = getStoredStaffAccounts();
-  const target = accounts.find((a) => a.id === accountId);
-
-  if (!target) {
-    return { success: false, error: "Account not found." };
-  }
-
-  target.passwordHash = cleanPass;
-  target.updatedAt = new Date().toISOString();
-  saveStoredStaffAccounts(accounts);
-
-  return { success: true };
 }

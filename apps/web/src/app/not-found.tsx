@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { Stethoscope, Home, Phone, Search, ArrowRight, HelpCircle } from "lucide-react";
+import { Stethoscope, Home, Phone, ArrowRight, HelpCircle } from "lucide-react";
 import { hospital } from "@/data/hospital";
 import { FloatingBlobs, PulseLineWatermark } from "@/components/ui/svg-patterns";
+
+export const metadata: Metadata = {
+  title: "Page Not Found",
+  description:
+    "The requested page is unavailable. Access 24/7 emergency care, clinical departments, or book an appointment at South City Hospital in Silchar.",
+};
 
 export default function NotFound() {
   return (

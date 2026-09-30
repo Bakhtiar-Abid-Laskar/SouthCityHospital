@@ -1,9 +1,17 @@
+export const SITE_URL = "https://southcityhospital.in";
+
 /**
- * South City Hospital — Static Hospital Information
- * This is hardcoded content. DO NOT add doctor data here.
+ * Generates an authoritative, absolute, lowercase canonical URL.
  */
+export function getCanonicalUrl(path = ""): string {
+  const cleanPath = path.startsWith("/") ? path : `/${path}`;
+  return cleanPath === "/" ? SITE_URL : `${SITE_URL}${cleanPath}`;
+}
+
 export const hospital = {
   name: "South City Hospital",
+  domain: "southcityhospital.in",
+  baseUrl: SITE_URL,
   tagline: "We care with a difference",
   established: 2006,
   managingPartner: "Nilava Mazumder",
@@ -17,11 +25,11 @@ export const hospital = {
   contact: {
     phone: "+91 6901271223",
     emergency: "+91 6901271223",
-    email: "support@southcityhospital.in",
+    email: "southcityhospital2014@gmail.com",
   },
   opd: {
-    hours: "09:00 AM – 04:00 PM",
-    days: "Monday – Saturday",
+    hours: "24x7 / Round-the-Clock",
+    days: "Monday – Sunday",
   },
   social: {
     instagram: "https://www.instagram.com/southcityhospitalsilchar",

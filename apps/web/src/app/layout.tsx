@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers/Providers";
+import { SITE_URL } from "@/data/hospital";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -23,13 +24,13 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://southcityhospital.in"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "South City Hospital — Multi-Specialty Hospital in Silchar, Assam",
     template: "%s | South City Hospital",
   },
   description:
-    "South City Hospital in Meherpur, Silchar, Assam — 13 clinical departments, 13 diagnostic facilities, and 24/7 emergency services. Trusted multi-specialty healthcare for the Barak Valley region.",
+    "South City Hospital in Silchar, Assam features 13 clinical departments, 13 diagnostic facilities, and round-the-clock emergency care for the Barak Valley.",
   keywords: [
     "South City Hospital",
     "hospital Silchar",
@@ -41,17 +42,29 @@ export const metadata: Metadata = {
     "best hospital in Silchar",
   ],
   authors: [{ name: "South City Hospital" }],
-  alternates: {
-    canonical: "./",
-  },
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://southcityhospital.in",
+    url: SITE_URL,
     siteName: "South City Hospital",
     title: "South City Hospital — Multi-Specialty Healthcare in Silchar",
     description:
-      "13 clinical departments, 13 diagnostic facilities, and 24/7 emergency care in Meherpur, Silchar, Assam.",
+      "South City Hospital in Silchar, Assam features 13 clinical departments, 13 diagnostic facilities, and round-the-clock emergency care for the Barak Valley.",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "South City Hospital Silchar - Multi-Specialty Healthcare & 24/7 Emergency Care",
+        type: "image/jpeg",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "South City Hospital — Multi-Specialty Healthcare in Silchar",
+    description:
+      "South City Hospital in Silchar, Assam features 13 clinical departments, 13 diagnostic facilities, and round-the-clock emergency care for the Barak Valley.",
     images: [
       {
         url: "/og-image.jpg",
@@ -61,17 +74,27 @@ export const metadata: Metadata = {
       },
     ],
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "South City Hospital — Multi-Specialty Healthcare in Silchar",
-    description:
-      "13 clinical departments, 13 diagnostic facilities, and 24/7 emergency services in Silchar, Assam.",
-    images: ["/og-image.jpg"],
-  },
   robots: {
     index: true,
     follow: true,
   },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "TODO_GOOGLE_SITE_VERIFICATION",
+    other: {
+      "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION || "TODO_BING_SITE_VERIFICATION",
+    },
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
+  manifest: "/manifest.webmanifest",
 };
 
 export const viewport: Viewport = {

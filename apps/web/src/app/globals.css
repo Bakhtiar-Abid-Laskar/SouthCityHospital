@@ -39,9 +39,10 @@
   --slate: var(--ink-600);
   --slate: var(--ink-600);
   --mist: var(--ink-300);
-  --cloud: #E6F3FA; /* A more distinct light blue background */
+  --cloud: #ffffff; /* Clean white background */
   --emergency: var(--coral-600);
   --emergency-light: rgba(214, 83, 79, 0.1);
+  --page-bg: #ffffff;
 
   /* Atmosphere */
   --noise-opacity: 0.04;
@@ -143,7 +144,7 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--cloud);
+  background-color: var(--white);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -496,13 +497,14 @@ select:focus-visible {
   height: 120px;
   background: linear-gradient(
     to bottom,
-    rgba(10, 38, 71, 0) 0%,
-    rgba(10, 38, 71, 0.4) 30%,
-    rgba(26, 58, 92, 0.8) 60%,
-    rgba(107, 133, 163, 0.95) 85%,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.10) 20%,
+    rgba(255, 255, 255, 0.35) 40%,
+    rgba(255, 255, 255, 0.65) 60%,
+    rgba(255, 255, 255, 0.90) 80%,
     var(--page-bg, #ffffff) 100%
   );
-  z-index: 0;
+  z-index: 1;
   pointer-events: none;
 }
 .bg-hero-gradient::after {

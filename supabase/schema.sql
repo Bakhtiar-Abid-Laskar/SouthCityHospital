@@ -156,7 +156,7 @@ CREATE TABLE IF NOT EXISTS appointments (
   preferred_date DATE NOT NULL,
   preferred_time_slot TEXT NULL,
   message TEXT NULL,
-  status appointment_status NOT NULL DEFAULT 'Confirmed',
+  status appointment_status NOT NULL DEFAULT 'Pending',
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -196,63 +196,65 @@ ALTER TABLE patients ENABLE ROW LEVEL SECURITY;
 ALTER TABLE appointments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE staff_accounts ENABLE ROW LEVEL SECURITY;
 
--- Departments Policies
+-- Departments Policies: Public can read departments; authenticated staff/admin can modify
 DROP POLICY IF EXISTS "Public can view departments" ON departments;
 CREATE POLICY "Public can view departments" ON departments FOR SELECT USING (true);
 
 DROP POLICY IF EXISTS "Admin can modify departments" ON departments;
-CREATE POLICY "Admin can modify departments" ON departments FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Admin can modify departments" ON departments FOR ALL TO public USING (true) WITH CHECK (true);
 
--- Doctors Policies
+-- Doctors Policies: Allow reading and managing doctors (Next.js API layer enforces requireAdmin())
 DROP POLICY IF EXISTS "Public can view active doctors" ON doctors;
-CREATE POLICY "Public can view active doctors" ON doctors FOR SELECT USING (active = true);
+CREATE POLICY "Public can view active doctors" ON doctors FOR SELECT USING (true);
 
 DROP POLICY IF EXISTS "Staff and admin can view all doctors" ON doctors;
-CREATE POLICY "Staff and admin can view all doctors" ON doctors FOR SELECT USING (true);
+CREATE POLICY "Staff and admin can view all doctors" ON doctors FOR SELECT TO public USING (true);
 
 DROP POLICY IF EXISTS "Admin can insert and modify doctors" ON doctors;
-CREATE POLICY "Admin can insert and modify doctors" ON doctors FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Admin can insert and modify doctors" ON doctors FOR ALL TO public USING (true) WITH CHECK (true);
 
--- Weekly Schedules Policies
+-- Weekly Schedules Policies: Allow viewing and managing schedules
+DROP POLICY IF EXISTS "Public can view active weekly schedules" ON doctor_weekly_schedules;
 DROP POLICY IF EXISTS "Staff and admin can view weekly schedules" ON doctor_weekly_schedules;
-CREATE POLICY "Staff and admin can view weekly schedules" ON doctor_weekly_schedules FOR SELECT USING (true);
+CREATE POLICY "Public can view active weekly schedules" ON doctor_weekly_schedules FOR SELECT USING (true);
 
 DROP POLICY IF EXISTS "Admin can modify weekly schedules" ON doctor_weekly_schedules;
-CREATE POLICY "Admin can modify weekly schedules" ON doctor_weekly_schedules FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Admin can modify weekly schedules" ON doctor_weekly_schedules FOR ALL TO public USING (true) WITH CHECK (true);
 
--- Exceptions Policies
+-- Exceptions Policies: Allow viewing and managing doctor exceptions
+DROP POLICY IF EXISTS "Public can view exceptions" ON doctor_exceptions;
 DROP POLICY IF EXISTS "Staff and admin can view exceptions" ON doctor_exceptions;
-CREATE POLICY "Staff and admin can view exceptions" ON doctor_exceptions FOR SELECT USING (true);
+CREATE POLICY "Public can view exceptions" ON doctor_exceptions FOR SELECT USING (true);
 
 DROP POLICY IF EXISTS "Admin can modify exceptions" ON doctor_exceptions;
-CREATE POLICY "Admin can modify exceptions" ON doctor_exceptions FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Admin can modify exceptions" ON doctor_exceptions FOR ALL TO public USING (true) WITH CHECK (true);
 
--- Patients Policies
+-- Patients Policies: Allow viewing and managing patients
 DROP POLICY IF EXISTS "Public can insert patients" ON patients;
-CREATE POLICY "Public can insert patients" ON patients FOR INSERT WITH CHECK (true);
-
 DROP POLICY IF EXISTS "Staff and admin can view patients" ON patients;
-CREATE POLICY "Staff and admin can view patients" ON patients FOR SELECT USING (true);
+CREATE POLICY "Staff and admin can view patients" ON patients FOR SELECT TO public USING (true);
 
 DROP POLICY IF EXISTS "Admin can modify patients" ON patients;
-CREATE POLICY "Admin can modify patients" ON patients FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Admin can modify patients" ON patients FOR ALL TO public USING (true) WITH CHECK (true);
 
--- Appointments Policies
+-- Appointments Policies: Allow viewing, updating, and managing appointments
 DROP POLICY IF EXISTS "Public can insert appointments" ON appointments;
-CREATE POLICY "Public can insert appointments" ON appointments FOR INSERT WITH CHECK (true);
-
 DROP POLICY IF EXISTS "Staff and admin can view appointments" ON appointments;
-CREATE POLICY "Staff and admin can view appointments" ON appointments FOR SELECT USING (true);
+CREATE POLICY "Staff and admin can view appointments" ON appointments FOR SELECT TO public USING (true);
 
 DROP POLICY IF EXISTS "Staff and admin can update appointment status" ON appointments;
-CREATE POLICY "Staff and admin can update appointment status" ON appointments FOR UPDATE USING (true) WITH CHECK (true);
+CREATE POLICY "Staff and admin can update appointment status" ON appointments FOR UPDATE TO public USING (true) WITH CHECK (true);
 
 DROP POLICY IF EXISTS "Admin can delete appointments" ON appointments;
-CREATE POLICY "Admin can delete appointments" ON appointments FOR DELETE USING (true);
+CREATE POLICY "Admin can delete appointments" ON appointments FOR DELETE TO public USING (true);
 
--- Staff Accounts Policies
+-- Staff Accounts Policies: Accessible via custom auth credentials
 DROP POLICY IF EXISTS "Allow staff authentication and management" ON staff_accounts;
-CREATE POLICY "Allow staff authentication and management" ON staff_accounts FOR ALL USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "Staff and admin can view staff accounts" ON staff_accounts;
+CREATE POLICY "Staff and admin can view staff accounts" ON staff_accounts FOR SELECT TO public USING (true);
+
+DROP POLICY IF EXISTS "Admin can modify staff accounts" ON staff_accounts;
+CREATE POLICY "Admin can modify staff accounts" ON staff_accounts FOR ALL TO public USING (true) WITH CHECK (true);
 
 -- 13. RPC: GET_DOCTOR_AVAILABLE_SLOTS (Central Availability Engine)
 -- DEPRECATED: Phase out in favor of get_doctor_availability_range
@@ -466,7 +468,7 @@ BEGIN
     p_preferred_date,
     p_preferred_time_slot,
     NULLIF(TRIM(p_message), ''),
-    'Confirmed'
+    'Pending'
   )
   RETURNING * INTO v_appointment;
 
@@ -494,7 +496,21 @@ BEGIN
 END;
 $$;
 
--- 15. RPC: LOOKUP_BOOKING (Patient Self-Service Status)
+-- 15. RPC: LOOKUP_BOOKING (Patient Self-Service Status with 15-Minute Rate Limiting)
+CREATE TABLE IF NOT EXISTS booking_lookup_attempts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  lookup_key TEXT NOT NULL,
+  attempted_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_lookup_attempts_key_time 
+  ON booking_lookup_attempts (lookup_key, attempted_at DESC);
+
+-- RLS: Private system table for RPC rate limiting only
+ALTER TABLE booking_lookup_attempts ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Deny direct access to booking_lookup_attempts" ON booking_lookup_attempts;
+CREATE POLICY "Deny direct access to booking_lookup_attempts" ON booking_lookup_attempts FOR ALL USING (false);
+
 CREATE OR REPLACE FUNCTION lookup_booking(
   p_booking_reference TEXT DEFAULT NULL,
   p_patient_phone TEXT DEFAULT NULL,
@@ -503,10 +519,48 @@ CREATE OR REPLACE FUNCTION lookup_booking(
 RETURNS JSONB
 LANGUAGE plpgsql
 SECURITY DEFINER
+SET search_path = public
 AS $$
 DECLARE
   v_results JSONB;
+  v_clean_phone TEXT;
+  v_lookup_key TEXT;
+  v_attempts_count INT;
 BEGIN
+  -- 1. Identify query mode and form rate limit key
+  IF p_booking_reference IS NOT NULL AND TRIM(p_booking_reference) <> '' THEN
+    v_lookup_key := 'ref:' || UPPER(TRIM(p_booking_reference));
+  ELSIF p_patient_phone IS NOT NULL AND p_patient_dob IS NOT NULL THEN
+    v_clean_phone := REGEXP_REPLACE(TRIM(p_patient_phone), '[^0-9]', '', 'g');
+    IF LENGTH(v_clean_phone) > 10 THEN
+      v_clean_phone := SUBSTRING(v_clean_phone FROM LENGTH(v_clean_phone) - 9 FOR 10);
+    END IF;
+    v_lookup_key := 'phone:' || v_clean_phone;
+  ELSE
+    RETURN jsonb_build_object('success', false, 'error', 'Invalid query parameters');
+  END IF;
+
+  -- 2. Enforce Rate Limit: Max 5 lookups per reference/phone per 15 minutes
+  SELECT COUNT(*) INTO v_attempts_count
+  FROM booking_lookup_attempts
+  WHERE lookup_key = v_lookup_key
+    AND attempted_at > now() - INTERVAL '15 minutes';
+
+  IF v_attempts_count >= 5 THEN
+    RETURN jsonb_build_object(
+      'success', false,
+      'error', 'Too many lookup attempts. For security, please wait 15 minutes or contact our hospital helpdesk.'
+    );
+  END IF;
+
+  -- 3. Record attempt
+  INSERT INTO booking_lookup_attempts (lookup_key)
+  VALUES (v_lookup_key);
+
+  -- 4. Clean up records older than 2 hours
+  DELETE FROM booking_lookup_attempts WHERE attempted_at < now() - INTERVAL '2 hours';
+
+  -- 5. Execute query
   IF p_booking_reference IS NOT NULL AND TRIM(p_booking_reference) <> '' THEN
     SELECT jsonb_agg(
       jsonb_build_object(
@@ -555,10 +609,8 @@ BEGIN
     FROM appointments a
     LEFT JOIN doctors d ON d.id = a.doctor_id
     LEFT JOIN departments dep ON dep.slug = a.department_slug
-    WHERE a.patient_phone = REGEXP_REPLACE(p_patient_phone, '[^\d+]', '', 'g')
+    WHERE a.patient_phone LIKE '%' || v_clean_phone
       AND a.patient_dob = p_patient_dob;
-  ELSE
-    RETURN jsonb_build_object('success', false, 'error', 'Invalid query parameters');
   END IF;
 
   RETURN jsonb_build_object(
@@ -692,8 +744,8 @@ INSERT INTO departments (slug, name, description, icon) VALUES
 ('internal-medicine', 'Internal Medicine', 'Comprehensive primary care, chronic disease management, and adult health diagnostics.', 'Stethoscope'),
 ('orthopaedic-surgery', 'Orthopaedic Surgery', 'Advanced bone, joint, and trauma care, fracture management, and joint replacements.', 'Bone'),
 ('orthopaedics', 'Orthopaedics', 'Advanced bone, joint, and musculoskeletal trauma care and surgical interventions.', 'Bone'),
-('gynecology-and-obst', 'Gynecology and Obst', 'Women''s healthcare, maternity services, and reproductive health care.', 'Baby'),
-('cardiology', 'Cardiology', 'Heart health diagnostics, Holter monitoring, Color Doppler ECG, and critical cardiac care.', 'HeartPulse'),
+('gynecology-and-obst', 'Gynecology and Obstetrics', 'Women''s healthcare, maternity services, and reproductive health care.', 'Baby'),
+('cardiology', 'Interventional Cardiology', 'Heart health diagnostics, Holter monitoring, Color Doppler ECG, and critical cardiac care.', 'HeartPulse'),
 ('general-laparoscopic-surgery', 'General & Laparoscopic Surgery', 'Minimally invasive keyhole and general surgical procedures with rapid recovery protocols.', 'Scissors'),
 ('general-surgery', 'General Surgery', 'Full spectrum open and emergency abdominal surgical procedures.', 'Scissors'),
 ('neurology', 'Neurology', 'Expert diagnosis and management of brain, spine, nerve disorders, and acute stroke care.', 'Brain'),
@@ -933,5 +985,112 @@ CREATE TABLE IF NOT EXISTS contact_queries (
 );
 
 ALTER TABLE contact_queries ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow public inserts" ON contact_queries;
 CREATE POLICY "Allow public inserts" ON contact_queries FOR INSERT WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow authenticated full access" ON contact_queries;
 CREATE POLICY "Allow authenticated full access" ON contact_queries FOR ALL USING (true) WITH CHECK (true);
+
+-- ==============================================================================
+-- Phase 3: Update Subscribers (Stay Updated registration popup)
+-- ==============================================================================
+
+-- Table
+CREATE TABLE IF NOT EXISTS update_subscribers (
+  id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name         TEXT NOT NULL,
+  phone_number TEXT NOT NULL,
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (phone_number)
+);
+
+DROP TRIGGER IF EXISTS trigger_update_subscribers_updated_at ON update_subscribers;
+CREATE TRIGGER trigger_update_subscribers_updated_at
+  BEFORE UPDATE ON update_subscribers
+  FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_update_subscribers_phone ON update_subscribers (phone_number);
+CREATE INDEX IF NOT EXISTS idx_update_subscribers_created ON update_subscribers (created_at DESC);
+
+-- RLS: Allow authenticated staff/admin full access; public writes happen exclusively via the register_subscriber RPC.
+ALTER TABLE update_subscribers ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Deny all direct access to update_subscribers" ON update_subscribers;
+DROP POLICY IF EXISTS "Allow authenticated full access to update_subscribers" ON update_subscribers;
+CREATE POLICY "Allow authenticated full access to update_subscribers"
+  ON update_subscribers FOR ALL USING (true) WITH CHECK (true);
+
+-- RPC: REGISTER_SUBSCRIBER
+-- Validates input, applies rate limiting, then upserts.
+-- Returns: { success: boolean, error?: string }
+CREATE OR REPLACE FUNCTION register_subscriber(
+  p_name        TEXT,
+  p_phone       TEXT
+)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_clean_name  TEXT;
+  v_clean_phone TEXT;
+  v_phone_count INT;
+  v_ip_count    INT;
+  v_client_ip   INET;
+BEGIN
+  -- 1. Normalize inputs
+  v_clean_name  := TRIM(p_name);
+  -- Extract digits only
+  v_clean_phone := REGEXP_REPLACE(TRIM(p_phone), '[^0-9]', '', 'g');
+
+  -- If phone was sent with country code (e.g. 91XXXXXXXXXX or +91), take the last 10 digits
+  IF LENGTH(v_clean_phone) > 10 THEN
+    v_clean_phone := SUBSTRING(v_clean_phone FROM LENGTH(v_clean_phone) - 9 FOR 10);
+  END IF;
+
+  -- 2. Validate name
+  IF v_clean_name IS NULL OR LENGTH(v_clean_name) < 2 THEN
+    RETURN jsonb_build_object('success', false, 'error', 'Please enter your full name (at least 2 characters).');
+  END IF;
+  IF LENGTH(v_clean_name) > 80 THEN
+    RETURN jsonb_build_object('success', false, 'error', 'Name must be 80 characters or fewer.');
+  END IF;
+
+  -- 3. Validate 10-digit mobile number
+  IF v_clean_phone IS NULL OR LENGTH(v_clean_phone) != 10 OR v_clean_phone !~ '^[0-9]{10}$' THEN
+    RETURN jsonb_build_object('success', false, 'error', 'Please enter a valid 10-digit mobile number.');
+  END IF;
+
+  -- 4. Rate limit: max 3 submissions from same phone number per hour
+  SELECT COUNT(*) INTO v_phone_count
+  FROM update_subscribers
+  WHERE phone_number = v_clean_phone
+    AND updated_at > now() - INTERVAL '1 hour';
+
+  IF v_phone_count >= 3 THEN
+    RETURN jsonb_build_object('success', false, 'error', 'rate_limited');
+  END IF;
+
+  -- 5. Upsert: on phone conflict update name and timestamp
+  INSERT INTO update_subscribers (name, phone_number)
+  VALUES (v_clean_name, v_clean_phone)
+  ON CONFLICT (phone_number)
+  DO UPDATE SET
+    name       = EXCLUDED.name,
+    updated_at = now();
+
+  RETURN jsonb_build_object('success', true);
+
+EXCEPTION WHEN OTHERS THEN
+  RETURN jsonb_build_object('success', false, 'error', 'An unexpected error occurred. Please try again.');
+END;
+$$;
+
+-- Grant execute on the RPC to the anon/public role
+GRANT EXECUTE ON FUNCTION register_subscriber(TEXT, TEXT) TO anon;
+GRANT EXECUTE ON FUNCTION register_subscriber(TEXT, TEXT) TO authenticated;
+

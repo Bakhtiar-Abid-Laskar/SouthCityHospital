@@ -9,7 +9,7 @@ import { FloatingBlobs, PulseLineWatermark } from "@/components/ui/svg-patterns"
 export const metadata: Metadata = {
   title: "About Us — Healthcare Since 2006",
   description:
-    "Founded in 2006 under the leadership of Nilava Mazumder, South City Hospital has served the Barak Valley for over 20 years with 13 clinical departments and 24/7 critical emergency response.",
+    "Serving Silchar and the Barak Valley since 2006, South City Hospital provides trusted multi-specialty clinical care and 24/7 emergency medical response.",
   alternates: {
     canonical: "https://southcityhospital.in/about",
   },
@@ -82,7 +82,7 @@ export default function AboutPage() {
       {/* ── Managing Partner ── */}
       <section
         className="py-[var(--section-y)]"
-        style={{ background: "var(--cloud)" }}
+        style={{ background: "var(--white)" }}
         aria-labelledby="partner-heading"
       >
         <div className="container-site">
@@ -92,7 +92,6 @@ export default function AboutPage() {
                 <div
                   className="relative w-60 h-60 sm:w-72 sm:h-72 rounded-full overflow-hidden"
                   style={{ background: "var(--primary-dark)" }}
-                  aria-hidden="true"
                 >
                   <Image
                     src="/nilava-mazumder.webp"

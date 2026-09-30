@@ -34,8 +34,16 @@ export default function GalleryPage() {
       </section>
 
       {/* Gallery Grid */}
-      <section className="py-[var(--section-y)] bg-[var(--cloud)] min-h-screen">
+      <section className="py-[var(--section-y)]" style={{ background: "var(--white)" }} aria-labelledby="gallery-grid-heading">
         <div className="container-site">
+          <div className="mb-6 sm:mb-8">
+            <h2 id="gallery-grid-heading" className="font-display text-display-sm text-[var(--primary-dark)]">
+              Hospital Campus & Facilities
+            </h2>
+            <p className="text-xs sm:text-sm text-[var(--slate)] mt-1">
+              Explore high-resolution photographs of our operating theaters, inpatient wards, and diagnostic units.
+            </p>
+          </div>
           <ImageGallery />
         </div>
       </section>

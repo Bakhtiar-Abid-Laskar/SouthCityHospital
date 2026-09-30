@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { requireAdmin } from "@/lib/auth/session";
 import type { Doctor } from "@sch/types";
 
 function getAnonSupabaseClient() {
@@ -19,8 +20,6 @@ function getServiceSupabaseClient() {
   }
   return createClient(url, key);
 }
-
-
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -67,6 +66,8 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    await requireAdmin();
+
     const body = await request.json();
     const doctor: Doctor = body.doctor;
 
@@ -92,6 +93,7 @@ export async function POST(request: Request) {
           consultation_schedule: doctor.consultationSchedule,
           languages: doctor.languages || ["English", "Bengali", "Hindi"],
           registration_number: doctor.registrationNumber,
+          biography: doctor.biography || null,
         });
 
         if (error) {
@@ -111,6 +113,18 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   } catch (err: any) {
+    if (err.message === "FORBIDDEN_ADMIN_ONLY") {
+      return NextResponse.json(
+        { success: false, error: "Forbidden: Admin role required." },
+        { status: 403 }
+      );
+    }
+    if (err.message === "UNAUTHORIZED") {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized: Admin session required." },
+        { status: 401 }
+      );
+    }
     return NextResponse.json(
       { success: false, error: err.message || "Failed to save doctor." },
       { status: 500 }
@@ -120,6 +134,8 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
+    await requireAdmin();
+
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
     const purgeAll = searchParams.get("all") === "true";
@@ -159,6 +175,18 @@ export async function DELETE(request: Request) {
 
     return NextResponse.json({ success: true, message: `Doctor ${id} deleted.` });
   } catch (err: any) {
+    if (err.message === "FORBIDDEN_ADMIN_ONLY") {
+      return NextResponse.json(
+        { success: false, error: "Forbidden: Admin role required." },
+        { status: 403 }
+      );
+    }
+    if (err.message === "UNAUTHORIZED") {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized: Admin session required." },
+        { status: 401 }
+      );
+    }
     return NextResponse.json(
       { success: false, error: err.message || "Failed to delete doctor." },
       { status: 500 }

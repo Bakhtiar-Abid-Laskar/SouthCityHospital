@@ -267,17 +267,31 @@ export default function AdminDashboardPage() {
                             </span>
                           </td>
                           <td className="py-3 px-4 text-right whitespace-nowrap">
-                            <select
-                              disabled={updatingId === apt.id}
-                              value={apt.status}
-                              onChange={(e) => handleStatusChange(apt.id, e.target.value as AppointmentStatus)}
-                              className="text-[10px] font-medium bg-white border border-[var(--mist)] rounded-lg px-2 py-1 outline-none hover:border-[var(--primary)]"
-                            >
-                              <option value="Confirmed">Confirmed</option>
-                              <option value="Completed">Completed</option>
-                              <option value="No-show">No-show</option>
-                              <option value="Cancelled">Cancelled</option>
-                            </select>
+                            <div className="flex items-center justify-end gap-1.5">
+                              {apt.status === "Pending" && (
+                                <button
+                                  type="button"
+                                  disabled={updatingId === apt.id}
+                                  onClick={() => handleStatusChange(apt.id, "Confirmed")}
+                                  className="px-2 py-0.5 text-[10px] font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded transition-colors shadow-2xs disabled:opacity-50"
+                                  title="Mark as Confirmed"
+                                >
+                                  Confirm
+                                </button>
+                              )}
+                              <select
+                                disabled={updatingId === apt.id}
+                                value={apt.status}
+                                onChange={(e) => handleStatusChange(apt.id, e.target.value as AppointmentStatus)}
+                                className="text-[10px] font-medium bg-white border border-[var(--mist)] rounded-lg px-2 py-1 outline-none hover:border-[var(--primary)]"
+                              >
+                                <option value="Pending">Pending</option>
+                                <option value="Confirmed">Confirmed</option>
+                                <option value="Completed">Completed</option>
+                                <option value="No-show">No-show</option>
+                                <option value="Cancelled">Cancelled</option>
+                              </select>
+                            </div>
                           </td>
                         </tr>
                       ))

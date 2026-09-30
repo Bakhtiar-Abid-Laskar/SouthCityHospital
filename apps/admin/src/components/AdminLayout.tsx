@@ -16,6 +16,7 @@ import {
   X,
   ChevronRight,
   MessageSquare,
+  BellRing,
 } from "lucide-react";
 import type { UserRole } from "@sch/types";
 
@@ -109,6 +110,11 @@ export function AdminLayout({
       href: "/queries",
       label: "Contact Queries",
       icon: MessageSquare,
+    },
+    {
+      href: "/subscribers",
+      label: "Subscribers",
+      icon: BellRing,
     },
   ];
 

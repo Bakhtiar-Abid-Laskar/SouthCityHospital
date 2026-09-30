@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import { Quote } from "lucide-react";
 import { testimonials } from "@/data/testimonials";
-import { ScrollReveal, StaggerReveal, StaggerItem, staggerItemVariants, Floating } from "@/components/ui/motion";
+import { ScrollReveal, StaggerReveal, StaggerItem, staggerItemVariants } from "@/components/ui/motion";
 import { CtaBand } from "@/components/home/CtaBand";
 import { FloatingBlobs, PulseLineWatermark } from "@/components/ui/svg-patterns";
 import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "Patient Reviews & Stories",
+  title: "Patient Reviews & Testimonials",
   description:
-    "Read patient testimonials and clinical care experiences at South City Hospital in Silchar, Assam across critical care, emergency medicine, and surgical departments.",
+    "Read genuine patient stories and clinical care reviews from families treated at South City Hospital in Silchar across emergency, surgical, and OPD services.",
   alternates: {
     canonical: "https://southcityhospital.in/testimonials",
   },
@@ -37,7 +37,7 @@ export default function TestimonialsPage() {
       </section>
 
       {/* Testimonial Grid */}
-      <section className="py-[var(--section-y)]" style={{ background: "var(--cloud)" }} aria-labelledby="testimonials-list-heading">
+      <section className="py-[var(--section-y)]" style={{ background: "var(--white)" }} aria-labelledby="testimonials-list-heading">
         <div className="container-site">
           <ScrollReveal className="mb-6 sm:mb-8">
             <h2 id="testimonials-list-heading" className="font-display text-display-md" style={{ color: "var(--primary-dark)" }}>

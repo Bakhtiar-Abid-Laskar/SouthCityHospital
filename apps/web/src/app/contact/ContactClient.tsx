@@ -13,7 +13,7 @@ import { InstagramIcon, FacebookIcon } from "@/components/icons/SocialIcons";
 import { hospital } from "@/data/hospital";
 import { submitContactQuery } from "@/services/contact";
 import { ScrollReveal, Floating } from "@/components/ui/motion";
-import { FloatingBlobs, DotGrid, PulseLineWatermark } from "@/components/ui/svg-patterns";
+import { FloatingBlobs, PulseLineWatermark } from "@/components/ui/svg-patterns";
 import { cn } from "@/lib/utils";
 
 const contactSchema = z.object({
@@ -160,7 +160,7 @@ export function ContactClient() {
 
 
 
-      <section className="py-[var(--section-y)]" style={{ background: "var(--cloud)" }} aria-labelledby="contact-section-heading">
+      <section className="py-[var(--section-y)]" style={{ background: "var(--white)" }} aria-labelledby="contact-section-heading">
         <div className="container-site">
           <div className="grid lg:grid-cols-2 gap-10">
             <ScrollReveal className="space-y-6">
@@ -193,27 +193,49 @@ export function ContactClient() {
               </div>
 
               <div
-                className="w-full h-48 rounded-[var(--radius-card)] border border-[rgba(208,213,221,0.5)] flex items-center justify-center relative overflow-hidden bg-white shadow-sm"
-                aria-label="Map placeholder — South City Hospital, Meherpur, Silchar"
-                role="img"
+                className="w-full rounded-[var(--radius-card)] border border-[rgba(208,213,221,0.5)] overflow-hidden shadow-sm"
+                style={{ height: "260px" }}
+                aria-label="Google Maps — South City Hospital, Meherpur, Silchar"
               >
-                <DotGrid className="opacity-40" />
-                <div className="text-center relative z-10">
-                  <MapPin size={28} style={{ color: "var(--blue-600)" }} className="mx-auto mb-2 drop-shadow-md" aria-hidden="true" />
-                  <p className="text-sm font-semibold" style={{ color: "var(--blue-950)" }}>South City Hospital</p>
-                  <p className="text-xs mt-1" style={{ color: "var(--slate)" }}>Meherpur, Silchar, Assam</p>
-                  <a
-                    href="https://maps.google.com/?q=Meherpur+Silchar+Assam"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-2 inline-block text-xs font-semibold"
-                    style={{ color: "var(--blue-600)" }}
-                  >
-                    Open in Google Maps ↗
-                  </a>
-                </div>
+                <iframe
+                  title="South City Hospital Location"
+                  src="https://maps.google.com/maps?q=South+City+Hospital+Meherpur+Silchar+Assam+788015&output=embed&z=16"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0, display: "block" }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
               </div>
 
+              {/* Social Media Links */}
+              <div className="flex items-center gap-3 pt-1">
+                <a
+                  href={hospital.social.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Follow us on Instagram"
+                  title={hospital.social.instagramHandle}
+                  className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:scale-105 hover:shadow-md"
+                  style={{ background: "linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)" }}
+                >
+                  <InstagramIcon size={16} aria-hidden="true" />
+                  {hospital.social.instagramHandle}
+                </a>
+                <a
+                  href={hospital.social.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Follow us on Facebook"
+                  title={hospital.social.facebookHandle}
+                  className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:scale-105 hover:shadow-md"
+                  style={{ background: "#1877F2" }}
+                >
+                  <FacebookIcon size={16} aria-hidden="true" />
+                  {hospital.social.facebookHandle}
+                </a>
+              </div>
 
             </ScrollReveal>
 

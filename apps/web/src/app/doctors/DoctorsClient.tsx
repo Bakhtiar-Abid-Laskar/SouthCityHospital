@@ -8,9 +8,18 @@ import { useDoctors } from "@/services/doctors";
 import { departments } from "@/data/departments";
 import { ScrollReveal, StaggerReveal, StaggerItem, staggerItemVariants } from "@/components/ui/motion";
 import { FloatingBlobs, PulseLineWatermark } from "@/components/ui/svg-patterns";
-import { DoctorBookingModal } from "@/components/booking/DoctorBookingModal";
-import { BookingConfirmationModal } from "@/components/booking/BookingConfirmationModal";
+import dynamic from "next/dynamic";
 import { fetchDoctorWeeklySchedules, type WeeklyScheduleItem } from "@/services/slots";
+
+const DoctorBookingModal = dynamic(
+  () => import("@/components/booking/DoctorBookingModal").then((mod) => mod.DoctorBookingModal),
+  { ssr: false }
+);
+
+const BookingConfirmationModal = dynamic(
+  () => import("@/components/booking/BookingConfirmationModal").then((mod) => mod.BookingConfirmationModal),
+  { ssr: false }
+);
 import { format12Hour } from "@/lib/date-utils";
 import { cn } from "@/lib/utils";
 import type { Doctor, Appointment } from "@sch/types";
@@ -105,7 +114,6 @@ function DoctorCard({ doctor, onBook }: { doctor: Doctor; onBook: (doctor: Docto
           <div
             className="relative w-32 h-32 rounded-xl overflow-hidden"
             style={{ background: "var(--primary-dark)" }}
-            aria-hidden="true"
           >
             <Image
               src={doctor.photoUrl}
@@ -210,7 +218,7 @@ export function DoctorsClient() {
         </div>
       </section>
 
-      <section className="py-[var(--section-y)] bg-[var(--cloud)]" aria-labelledby="doctors-list-heading">
+      <section className="py-[var(--section-y)]" style={{ background: "var(--white)" }} aria-labelledby="doctors-list-heading">
         <div className="container-site">
           <ScrollReveal className="mb-4 sm:mb-6">
             <h2 id="doctors-list-heading" className="font-display text-display-md mb-2 text-[var(--primary-dark)]">
@@ -325,22 +333,26 @@ export function DoctorsClient() {
       </section>
 
       {/* Doctor-Scoped Booking Modal */}
-      <DoctorBookingModal
-        doctor={selectedDoctor}
-        isOpen={!!selectedDoctor}
-        onClose={() => setSelectedDoctor(null)}
-        onSuccess={(apt) => {
-          setSelectedDoctor(null);
-          setConfirmedAppointment(apt);
-        }}
-      />
+      {selectedDoctor && (
+        <DoctorBookingModal
+          doctor={selectedDoctor}
+          isOpen={!!selectedDoctor}
+          onClose={() => setSelectedDoctor(null)}
+          onSuccess={(apt) => {
+            setSelectedDoctor(null);
+            setConfirmedAppointment(apt);
+          }}
+        />
+      )}
 
       {/* Booking Confirmation Slip & PDF Download Modal */}
-      <BookingConfirmationModal
-        appointment={confirmedAppointment}
-        isOpen={!!confirmedAppointment}
-        onClose={() => setConfirmedAppointment(null)}
-      />
+      {confirmedAppointment && (
+        <BookingConfirmationModal
+          appointment={confirmedAppointment}
+          isOpen={!!confirmedAppointment}
+          onClose={() => setConfirmedAppointment(null)}
+        />
+      )}
     </>
   );
 }

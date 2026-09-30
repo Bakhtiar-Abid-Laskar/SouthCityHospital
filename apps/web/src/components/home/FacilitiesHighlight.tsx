@@ -30,7 +30,7 @@ export function FacilitiesHighlight() {
     <section
       aria-labelledby="facilities-heading"
       className="py-[var(--section-y)]"
-      style={{ background: "var(--cloud)" }}
+      style={{ background: "var(--white)" }}
     >
       <div className="container-site">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">

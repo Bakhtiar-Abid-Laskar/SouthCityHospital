@@ -79,7 +79,6 @@ export default function BookingsHubPage() {
   };
 
   const handleStatusChange = async (appointmentId: string, newStatus: AppointmentStatus) => {
-    if (userRole !== "admin") return;
     setStatusUpdatingId(appointmentId);
     try {
       await updateBookingStatus(appointmentId, newStatus);
@@ -271,35 +270,47 @@ export default function BookingsHubPage() {
 
                       <td className="py-3.5 px-4 whitespace-nowrap">
                         <span
-                          className={`chip text-[10px] font-bold py-0.5 px-2 ${
+                          className={`chip text-[10px] font-bold py-0.5 px-2.5 rounded-md ${
                             apt.status === "Confirmed"
-                              ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                               : apt.status === "Cancelled"
-                              ? "bg-red-50 text-red-700 border-red-200"
+                              ? "bg-red-50 text-red-700 border border-red-200"
                               : apt.status === "Completed"
-                              ? "bg-blue-50 text-blue-700 border-blue-200"
-                              : "bg-amber-50 text-amber-700 border-amber-200"
+                              ? "bg-blue-50 text-blue-700 border border-blue-200"
+                              : "bg-amber-50 text-amber-800 border border-amber-300 font-extrabold"
                           }`}
                         >
-                          {apt.status}
+                          {apt.status === "Pending" ? "● Pending" : apt.status}
                         </span>
                       </td>
 
-                      {userRole === "admin" && (
-                        <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                      <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-2">
+                          {apt.status === "Pending" && (
+                            <button
+                              type="button"
+                              disabled={statusUpdatingId === apt.id}
+                              onClick={() => handleStatusChange(apt.id, "Confirmed")}
+                              className="px-2.5 py-1 text-[11px] font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors shadow-2xs flex items-center gap-1 disabled:opacity-50"
+                              title="Mark as Confirmed"
+                            >
+                              <span>Confirm</span>
+                            </button>
+                          )}
                           <select
                             disabled={statusUpdatingId === apt.id}
                             value={apt.status}
                             onChange={(e) => handleStatusChange(apt.id, e.target.value as AppointmentStatus)}
                             className="text-[11px] font-medium bg-white border border-[var(--mist)] rounded-lg px-2 py-1 outline-none cursor-pointer hover:border-[var(--primary)]"
                           >
+                            <option value="Pending">Pending</option>
                             <option value="Confirmed">Confirmed</option>
                             <option value="Completed">Completed</option>
                             <option value="Cancelled">Cancelled</option>
                             <option value="No-show">No-show</option>
                           </select>
-                        </td>
-                      )}
+                        </div>
+                      </td>
                     </tr>
                   ))
                 )}

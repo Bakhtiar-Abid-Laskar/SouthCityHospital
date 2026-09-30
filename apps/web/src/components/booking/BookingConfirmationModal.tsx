@@ -118,14 +118,20 @@ export function BookingConfirmationModal({
         {/* 1. Header */}
         <div className="bg-[var(--navy-950)] text-white px-4 py-3 sm:px-6 sm:py-4 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2.5 sm:gap-3">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
-              <CheckCircle2 size={20} />
+            <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0 ${
+              appointment.status === "Pending"
+                ? "bg-amber-500/20 text-amber-400"
+                : "bg-emerald-500/20 text-emerald-400"
+            }`}>
+              {appointment.status === "Pending" ? <Clock size={20} /> : <CheckCircle2 size={20} />}
             </div>
             <div>
               <h2 id="confirmation-heading" className="font-display font-bold text-sm sm:text-lg">
-                Appointment Confirmed
+                {appointment.status === "Pending" ? "Appointment Request Received" : "Appointment Confirmed"}
               </h2>
-              <p className="text-[11px] sm:text-xs text-white/70">South City Hospital · Meherpur</p>
+              <p className="text-[11px] sm:text-xs text-white/70">
+                South City Hospital · Meherpur {appointment.status === "Pending" && "· Pending Admin Confirmation"}
+              </p>
             </div>
           </div>
 
@@ -141,21 +147,48 @@ export function BookingConfirmationModal({
 
         {/* 2. Scrollable Body */}
         <div className="px-4 py-3.5 sm:px-6 sm:py-5 space-y-3.5 sm:space-y-4 overflow-y-auto flex-1 min-h-0 overscroll-contain">
+          {/* Status Explanation Box */}
+          {appointment.status === "Pending" ? (
+            <div className="p-3 sm:p-3.5 rounded-xl bg-amber-50/90 border border-amber-200 text-amber-950 flex items-start gap-2.5 sm:gap-3 shadow-xs">
+              <div className="p-1.5 sm:p-2 rounded-lg bg-amber-100 text-amber-800 shrink-0 mt-0.5">
+                <Clock size={18} />
+              </div>
+              <div className="text-xs">
+                <p className="font-bold text-amber-900 leading-tight">Status: Pending Admin Confirmation</p>
+                <p className="text-amber-800/90 mt-1 leading-relaxed text-[11px]">
+                  Your appointment request has been submitted. Our hospital administration staff will review and mark it <strong>Confirmed</strong> shortly. You can check your booking status anytime using your reference ID.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="p-3 sm:p-3.5 rounded-xl bg-emerald-50/90 border border-emerald-200 text-emerald-950 flex items-start gap-2.5 sm:gap-3 shadow-xs">
+              <div className="p-1.5 sm:p-2 rounded-lg bg-emerald-100 text-emerald-800 shrink-0 mt-0.5">
+                <CheckCircle2 size={18} />
+              </div>
+              <div className="text-xs">
+                <p className="font-bold text-emerald-900 leading-tight">Status: Confirmed by Hospital</p>
+                <p className="text-emerald-800/90 mt-1 leading-relaxed text-[11px]">
+                  Your consultation slot is confirmed. Please arrive 15 minutes before your time window.
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Screenshot Alert Box */}
-          <div className="p-3 sm:p-3.5 rounded-xl bg-amber-50 border border-amber-200/80 text-amber-900 flex items-center gap-2.5 sm:gap-3 shadow-xs">
-            <div className="p-1.5 sm:p-2 rounded-lg bg-amber-100 text-amber-800 shrink-0">
+          <div className="p-3 sm:p-3.5 rounded-xl bg-blue-50/80 border border-blue-200/80 text-blue-950 flex items-center gap-2.5 sm:gap-3 shadow-xs">
+            <div className="p-1.5 sm:p-2 rounded-lg bg-blue-100 text-blue-800 shrink-0">
               <Camera size={18} />
             </div>
             <div>
-              <p className="text-xs font-bold leading-tight">Please take a screenshot of this slip</p>
-              <p className="text-[11px] text-amber-800/80 mt-0.5">
-                Save this screen for quick verification at the hospital registration desk.
+              <p className="text-xs font-bold leading-tight">Please save or screenshot this slip</p>
+              <p className="text-[11px] text-blue-800/80 mt-0.5">
+                Show this reference ID at the registration desk when visiting the hospital.
               </p>
             </div>
           </div>
 
           {/* Booking Reference Box */}
-          <div className="p-3.5 sm:p-4 rounded-xl bg-[var(--cloud)] border border-[var(--mist)] flex items-center justify-between gap-2">
+          <div className="p-3.5 sm:p-4 rounded-xl bg-[var(--white)] border border-[var(--mist)] flex items-center justify-between gap-2 shadow-2xs">
             <div className="min-w-0">
               <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[var(--slate)]">
                 Booking Reference ID
@@ -175,7 +208,11 @@ export function BookingConfirmationModal({
                 {copied ? <Check size={13} className="text-emerald-600" /> : <Copy size={13} />}
                 <span>{copied ? "Copied" : "Copy"}</span>
               </button>
-              <span className="chip text-[10px] sm:text-[11px] font-bold py-1 px-2 sm:px-2.5 bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <span className={`chip text-[10px] sm:text-[11px] font-bold py-1 px-2 sm:px-2.5 ${
+                appointment.status === "Pending"
+                  ? "bg-amber-50 text-amber-800 border border-amber-300"
+                  : "bg-emerald-50 text-emerald-700 border border-emerald-200"
+              }`}>
                 {appointment.status}
               </span>
             </div>

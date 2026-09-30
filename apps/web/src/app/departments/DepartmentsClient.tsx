@@ -2,26 +2,25 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
 import {
   Stethoscope, Bone, Brain, Scissors, Microscope, Baby,
   Zap, Droplets, HeartPulse, ScanFace, ShieldCheck, ChevronDown, CheckCircle2,
-  ScanSearch, Syringe, Dna
+  ScanSearch, Syringe, Dna, ArrowRight
 } from "lucide-react";
 import { departments } from "@/data/departments";
 import { ScrollReveal, StaggerReveal, StaggerItem, staggerItemVariants } from "@/components/ui/motion";
 import { CtaBand } from "@/components/home/CtaBand";
 import { FloatingBlobs, PulseLineWatermark } from "@/components/ui/svg-patterns";
-import Image from "next/image";
 
 const iconMap: Record<string, React.ElementType> = {
   Stethoscope, Bone, Brain, Scissors, Microscope, Baby,
   Zap, Droplets, HeartPulse, ScanFace, ShieldCheck, ScanSearch, Syringe, Dna
 };
 
-function DepartmentCard({ dept, index }: { dept: (typeof departments)[0]; index: number }) {
+function DepartmentCard({ dept }: { dept: (typeof departments)[0] }) {
   const [open, setOpen] = useState(false);
   const Icon = iconMap[dept.icon] || Stethoscope;
-  const isFeatured = index < 4;
 
   return (
     <StaggerItem variants={staggerItemVariants}
@@ -72,6 +71,22 @@ function DepartmentCard({ dept, index }: { dept: (typeof departments)[0]; index:
                     ))}
                 </ul>
               </div>
+
+              <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--mist)]">
+                <Link
+                  href={`/departments/${dept.slug}`}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--primary)] hover:text-[var(--primary-dark)] transition-colors"
+                >
+                  <span>Explore full {dept.name} services & treatments</span>
+                  <ArrowRight size={13} aria-hidden="true" />
+                </Link>
+                <Link
+                  href={`/doctors?department=${dept.slug}`}
+                  className="inline-flex items-center gap-1 text-xs font-medium text-[var(--slate)] hover:text-[var(--primary)] transition-colors"
+                >
+                  <span>Consult doctor</span>
+                </Link>
+              </div>
             </div>
           </motion.div>
         )}
@@ -100,7 +115,7 @@ export function DepartmentsClient() {
         </div>
       </section>
 
-      <section className="py-[var(--section-y)]" style={{ background: "var(--cloud)" }} aria-labelledby="depts-list-heading">
+      <section className="py-[var(--section-y)]" style={{ background: "var(--white)" }} aria-labelledby="depts-list-heading">
         <div className="container-site">
           <ScrollReveal className="mb-8">
             <h2 id="depts-list-heading" className="font-display text-display-md" style={{ color: "var(--primary-dark)" }}>All clinical departments</h2>
@@ -108,7 +123,7 @@ export function DepartmentsClient() {
           </ScrollReveal>
 
           <StaggerReveal className="grid sm:grid-cols-2 gap-4">
-            {departments.map((dept, idx) => <DepartmentCard key={dept.id} dept={dept} index={idx} />)}
+            {departments.map((dept) => <DepartmentCard key={dept.id} dept={dept} />)}
           </StaggerReveal>
         </div>
       </section>

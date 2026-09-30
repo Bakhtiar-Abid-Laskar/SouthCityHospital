@@ -4,11 +4,25 @@ import type { AuthSession } from "@sch/types";
 
 const ADMIN_SESSION_COOKIE = "sch_admin_session";
 const SESSION_MAX_AGE_SECONDS = 60 * 60; // 60 minutes session
-const SECRET_KEY = process.env.JWT_SECRET_KEY || "super-secret-default-key-for-dev";
-const encodedKey = new TextEncoder().encode(SECRET_KEY);
+
+export function getJwtSecretKey(): Uint8Array {
+  const secret = process.env.JWT_SECRET_KEY || process.env.ADMIN_SESSION_SECRET;
+
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(
+        "CRITICAL SECURITY CONFIGURATION ERROR: JWT_SECRET_KEY (or ADMIN_SESSION_SECRET) environment variable must be defined in production."
+      );
+    }
+    return new TextEncoder().encode("sch-dev-local-jwt-secret-key-32-chars-minimum");
+  }
+
+  return new TextEncoder().encode(secret);
+}
 
 export async function setSessionCookie(session: AuthSession): Promise<void> {
   const cookieStore = await cookies();
+  const encodedKey = getJwtSecretKey();
   
   const token = await new SignJWT(session as any)
     .setProtectedHeader({ alg: "HS256" })
@@ -30,6 +44,19 @@ export async function clearSessionCookie(): Promise<void> {
   cookieStore.delete(ADMIN_SESSION_COOKIE);
 }
 
+export async function verifySessionToken(token: string): Promise<AuthSession | null> {
+  if (!token) return null;
+  try {
+    const encodedKey = getJwtSecretKey();
+    const { payload } = await jwtVerify(token, encodedKey, {
+      algorithms: ["HS256"],
+    });
+    return payload as unknown as AuthSession;
+  } catch {
+    return null;
+  }
+}
+
 export async function getSessionUser(): Promise<AuthSession | null> {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get(ADMIN_SESSION_COOKIE);
@@ -38,14 +65,7 @@ export async function getSessionUser(): Promise<AuthSession | null> {
     return null;
   }
 
-  try {
-    const { payload } = await jwtVerify(sessionCookie.value, encodedKey, {
-      algorithms: ["HS256"],
-    });
-    return payload as unknown as AuthSession;
-  } catch {
-    return null;
-  }
+  return verifySessionToken(sessionCookie.value);
 }
 
 export async function requireAdmin(): Promise<AuthSession> {

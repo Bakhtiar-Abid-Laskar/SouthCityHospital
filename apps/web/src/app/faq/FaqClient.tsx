@@ -31,7 +31,7 @@ export function FaqClient() {
         </div>
       </section>
 
-      <section className="py-[var(--section-y)]" style={{ background: "var(--cloud)" }} aria-label="FAQ list">
+      <section className="py-[var(--section-y)]" style={{ background: "var(--white)" }} aria-label="FAQ list">
         <div className="container-site max-w-3xl">
           <StaggerReveal className="space-y-3 sm:space-y-4">
             {faqs.map((faq) => {

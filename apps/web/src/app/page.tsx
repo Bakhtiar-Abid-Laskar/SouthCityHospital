@@ -11,10 +11,10 @@ import { FaqHighlight } from "@/components/home/FaqHighlight";
 
 export const metadata: Metadata = {
   title: {
-    absolute: "South City Hospital — Multi-Specialty Hospital in Silchar, Assam",
+    absolute: "South City Hospital — Multi-Specialty Hospital in Silchar",
   },
   description:
-    "South City Hospital is a premier multi-specialty healthcare institution in Meherpur, Silchar, Assam with 13 clinical departments, 13 diagnostic facilities, and 24/7 emergency services.",
+    "South City Hospital in Silchar, Assam offers 13 clinical departments, advanced diagnostics, and 24/7 critical emergency care. Book your consultation today.",
   alternates: {
     canonical: "https://southcityhospital.in",
   },

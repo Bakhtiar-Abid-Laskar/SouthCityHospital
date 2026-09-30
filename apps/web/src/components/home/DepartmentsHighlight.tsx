@@ -23,7 +23,7 @@ export function DepartmentsHighlight() {
     <section
       aria-labelledby="departments-heading"
       className="py-[var(--section-y)]"
-      style={{ background: "var(--cloud)" }}
+      style={{ background: "var(--white)" }}
     >
       <div className="container-site">
         {/* Header */}
@@ -69,7 +69,7 @@ export function DepartmentsHighlight() {
                   {/* Icon */}
                   <div
                     className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 transition-colors group-hover:bg-[var(--primary)] group-hover:text-white"
-                    style={{ background: "var(--cloud)", color: "var(--primary)" }}
+                    style={{ background: "var(--primary-light)", color: "var(--primary)" }}
                     aria-hidden="true"
                   >
                     <Icon size={20} />

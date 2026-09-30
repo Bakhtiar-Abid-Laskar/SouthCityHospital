@@ -14,20 +14,20 @@ export function CoreValuesSection() {
   return (
     <section
       aria-labelledby="values-heading"
-      className="py-[var(--section-y)]"
+      className="pt-10 pb-16 sm:pt-12 sm:pb-20"
       style={{ background: "var(--white)" }}
     >
       <div className="container-site">
-        <ScrollReveal className="text-center max-w-2xl mx-auto mb-12">
-          <p className="eyebrow mb-3 justify-center">Our Foundation</p>
+        <ScrollReveal className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
+          <p className="eyebrow mb-2.5 justify-center">Our Foundation</p>
           <h2
             id="values-heading"
-            className="font-display text-display-lg mb-4"
+            className="font-display text-display-lg mb-3"
             style={{ color: "var(--primary-dark)" }}
           >
             What drives us
           </h2>
-          <p className="text-base leading-relaxed" style={{ color: "var(--slate)" }}>
+          <p className="text-sm sm:text-base leading-relaxed" style={{ color: "var(--slate)" }}>
             Three principles that have guided South City Hospital since 2006.
           </p>
         </ScrollReveal>

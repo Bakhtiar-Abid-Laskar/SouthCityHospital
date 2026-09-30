@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { DepartmentsClient } from "./DepartmentsClient";
 
 export const metadata: Metadata = {
-  title: "Clinical Departments & Specialties in Silchar",
+  title: "Clinical Departments & Specialties",
   description:
-    "Explore 13 clinical departments at South City Hospital in Silchar, Assam — Orthopaedics, Neuro Surgery, Cardiology, Gynaecology, Paediatrics, Nephrology, Urology, and General Surgery.",
+    "Explore 13 clinical departments at South City Hospital in Silchar, from Cardiology and Orthopaedics to Neuro Surgery and Paediatrics. Expert care every day.",
   alternates: {
     canonical: "https://southcityhospital.in/departments",
   },
