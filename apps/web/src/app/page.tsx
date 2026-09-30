@@ -8,6 +8,7 @@ import { TestimonialsHighlight } from "@/components/home/TestimonialsHighlight";
 import { AboutSection } from "@/components/home/AboutSection";
 import { CtaBand } from "@/components/home/CtaBand";
 import { FaqHighlight } from "@/components/home/FaqHighlight";
+import { ReviewsSection } from "@/components/home/ReviewsSection";
 
 export const metadata: Metadata = {
   title: {
@@ -30,6 +31,7 @@ export default function HomePage() {
       <FacilitiesHighlight />
       <DoctorsHighlight />
       <TestimonialsHighlight />
+      <ReviewsSection />
       <FaqHighlight />
       <CtaBand />
     </>
