@@ -221,34 +221,58 @@ export function Footer() {
 
       {/* ── Bottom Bar ── */}
       <div
-        className="border-t py-5"
+        className="border-t py-6"
         style={{ borderColor: "rgba(255,255,255,0.10)" }}
       >
-        <div className="container-site flex flex-col sm:flex-row items-center justify-between gap-4 text-xs" style={{ color: "rgba(255,255,255,0.60)" }}>
+        <div className="container-site flex flex-col lg:flex-row items-center justify-between gap-4 text-xs" style={{ color: "rgba(255,255,255,0.60)" }}>
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
             <p>
               © {new Date().getFullYear()} South City Hospital. All rights reserved.
             </p>
             <span className="hidden sm:inline opacity-30">|</span>
-            <div className="flex items-center gap-4 py-1">
+            <div className="flex items-center gap-4 py-0.5">
               <Link
                 href="/privacy-policy"
-                className="hover:text-white transition-colors underline-offset-4 hover:underline py-1.5"
+                className="hover:text-white transition-colors underline-offset-4 hover:underline"
               >
                 Privacy Policy
               </Link>
               <span className="opacity-30">·</span>
               <Link
                 href="/terms-of-service"
-                className="hover:text-white transition-colors underline-offset-4 hover:underline py-1.5"
+                className="hover:text-white transition-colors underline-offset-4 hover:underline"
               >
                 Terms of Service
               </Link>
             </div>
           </div>
-          <p className="flex items-center gap-1.5 text-white/50">
-            Made with <Heart size={12} aria-hidden="true" style={{ color: "var(--emergency)" }} /> for the people of Silchar.
-          </p>
+
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center lg:text-right">
+            <p className="flex items-center justify-center gap-1.5 text-white/50">
+              Made with <Heart size={12} aria-hidden="true" style={{ color: "var(--emergency)" }} /> for the people of Silchar.
+            </p>
+            <span className="hidden sm:inline opacity-30">|</span>
+            <p className="text-white/60">
+              Website built by{" "}
+              <a
+                href="https://www.nilakshithenterprise.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white font-medium hover:text-[var(--accent)] underline decoration-white/30 underline-offset-4 hover:decoration-[var(--accent)] transition-colors"
+              >
+                Nilakshith Enterprise
+              </a>{" "}
+              &amp;{" "}
+              <a
+                href="https://bakhtiar-abid-laskar.github.io/bakhtiarabidlaskar.github.io/#about"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white font-medium hover:text-[var(--accent)] underline decoration-white/30 underline-offset-4 hover:decoration-[var(--accent)] transition-colors"
+              >
+                Bakhtiar Abid Laskar
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </footer>
