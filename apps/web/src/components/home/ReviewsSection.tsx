@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ReviewsSection
  * Homepage section: "Patient Reviews" (position 8 of 9).
  * Background: var(--white) - alternates correctly after TestimonialsHighlight
@@ -8,22 +8,13 @@
  * ReviewsSlider is the only client component and is imported dynamically.
  */
 
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { ScrollReveal } from "@/components/ui/motion";
 import { StarRating } from "@/components/ui/StarRating";
 import { reviews, averageRating, totalReviews } from "@/data/reviews";
 import { GOOGLE_MAPS_REVIEWS_URL } from "@/data/reviews-config";
-
-// Client-only slider - no SSR needed; does not affect hero or section layout
-const ReviewsSlider = dynamic(
-  () =>
-    import("@/components/home/ReviewsSlider").then((m) => ({
-      default: m.ReviewsSlider,
-    })),
-  { ssr: false }
-);
+import { ReviewsSliderClient } from "@/components/home/ReviewsSliderClient";
 
 export function ReviewsSection() {
   return (
@@ -82,7 +73,7 @@ export function ReviewsSection() {
         </div>
 
         {/* ── Slider ──────────────────────────────────────────────────────── */}
-        <ReviewsSlider reviews={reviews} />
+        <ReviewsSliderClient reviews={reviews} />
       </div>
     </section>
   );
