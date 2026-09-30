@@ -17,6 +17,7 @@ import {
   Search,
   CalendarPlus,
   Info,
+  MapPin,
 } from "lucide-react";
 import Link from "next/link";
 import type { Appointment } from "@sch/types";
@@ -25,6 +26,7 @@ import { downloadBookingSlipPdf } from "@/lib/pdf-slip";
 import { buildGoogleCalendarUrl, downloadIcsCalendarFile } from "@/lib/calendar";
 import { getDepartmentPrepInstructions } from "@/data/prep-instructions";
 import { analytics } from "@/lib/analytics";
+import { hospital } from "@/data/hospital";
 
 interface BookingConfirmationModalProps {
   appointment: Appointment | null;
@@ -274,6 +276,27 @@ export function BookingConfirmationModal({
             <div>
               <p className="font-bold text-[var(--navy-950)]">Consultation Preparation:</p>
               <p className="text-[var(--slate)] mt-0.5 leading-relaxed">{prepNote}</p>
+            </div>
+          </div>
+
+          {/* Hospital Address & Emergency Phone Details */}
+          <div className="p-3 sm:p-3.5 rounded-xl bg-slate-50 border border-[var(--mist)] space-y-2 text-xs">
+            <div className="flex items-start gap-2">
+              <MapPin size={15} className="text-[var(--primary)] shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-[var(--navy-950)]">South City Hospital</p>
+                <p className="text-[var(--slate)] text-[11px] sm:text-xs">{hospital.location.address}</p>
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-1.5 border-t border-[var(--mist)] text-[11px]">
+              <div className="flex items-center gap-1 text-[var(--navy-950)] font-medium">
+                <Phone size={12} className="text-[var(--primary)] shrink-0" />
+                <span>OPD Phone: {hospital.contact.phone}</span>
+              </div>
+              <div className="flex items-center gap-1.5 text-rose-700 font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-600 animate-pulse" />
+                <span>24/7 Emergency: {hospital.contact.emergency}</span>
+              </div>
             </div>
           </div>
 
