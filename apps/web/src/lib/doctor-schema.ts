@@ -79,8 +79,20 @@ export function buildPhysicianSchema(
       postalCode: hospital.location.pincode,
       addressCountry: "IN",
     },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: hospital.location.geo.latitude,
+      longitude: hospital.location.geo.longitude,
+    },
+    areaServed: hospital.areasServed.map((a) => ({
+      "@type": a.type,
+      name: a.name,
+      sameAs: a.sameAs,
+    })),
+    isAcceptingNewPatients: true,
     worksFor: {
       "@type": "Hospital",
+      "@id": `${SITE_URL}/#hospital`,
       name: hospital.name,
       url: SITE_URL,
       telephone: hospital.contact.emergency,
@@ -140,19 +152,27 @@ export function buildBreadcrumbSchema(items: { name: string; url: string }[]) {
 }
 
 /**
- * Builds site-wide Hospital Schema.org JSON-LD representation.
+ * Builds site-wide Hospital Schema.org JSON-LD representation with full Geo & AI Knowledge Graph anchoring.
  */
 export function buildHospitalSchema() {
+  const googleBusinessUrl =
+    process.env.NEXT_PUBLIC_GOOGLE_BUSINESS_URL ||
+    "https://www.google.com/maps/place/South+City+Hospital/@24.785576,92.7955732,17z";
+
   const sameAs = [
     hospital.social.facebook,
     hospital.social.instagram,
-    process.env.NEXT_PUBLIC_GOOGLE_BUSINESS_URL,
+    googleBusinessUrl,
+    hospital.geoEntities.silcharWikidata,
+    hospital.geoEntities.silcharWikipedia,
   ].filter(Boolean);
 
   return {
     "@context": "https://schema.org",
-    "@type": "Hospital",
+    "@type": ["Hospital", "EmergencyService", "MedicalOrganization"],
+    "@id": `${SITE_URL}/#hospital`,
     name: hospital.name,
+    legalName: `${hospital.name}, Silchar`,
     url: SITE_URL,
     logo: `${SITE_URL}/logo.webp`,
     image: `${SITE_URL}/og-image.jpg`,
@@ -160,6 +180,11 @@ export function buildHospitalSchema() {
     telephone: hospital.contact.phone,
     emergencyTelephone: hospital.contact.emergency,
     openingHours: "Mo-Su 00:00-24:00",
+    isAcceptingNewPatients: true,
+    priceRange: "₹₹",
+    currenciesAccepted: "INR",
+    paymentAccepted: "Cash, Credit Card, UPI, Net Banking, Health Insurance",
+    hasMap: googleBusinessUrl,
     address: {
       "@type": "PostalAddress",
       streetAddress: hospital.location.area,
@@ -170,9 +195,55 @@ export function buildHospitalSchema() {
     },
     geo: {
       "@type": "GeoCoordinates",
-      latitude: "24.8167",
-      longitude: "92.8000",
+      latitude: hospital.location.geo.latitude,
+      longitude: hospital.location.geo.longitude,
     },
+    areaServed: hospital.areasServed.map((area) => ({
+      "@type": area.type,
+      name: area.name,
+      sameAs: area.sameAs,
+    })),
+    medicalSpecialty: [
+      "Orthopedics",
+      "Cardiology",
+      "Urology",
+      "Gynecology",
+      "Obstetrics",
+      "NeurologicalSurgery",
+      "Pediatrics",
+      "InternalMedicine",
+      "Gastroenterology",
+      "Otolaryngology",
+      "CriticalCare",
+      "EmergencyMedicine",
+      "DiagnosticRadiology",
+    ],
+    availableService: [
+      {
+        "@type": "MedicalProcedure",
+        name: "24/7 Emergency & Trauma Care",
+      },
+      {
+        "@type": "MedicalProcedure",
+        name: "Intensive Care Unit (ICU) & Coronary Care Unit (CCU)",
+      },
+      {
+        "@type": "MedicalProcedure",
+        name: "Hemodialysis Unit",
+      },
+      {
+        "@type": "MedicalProcedure",
+        name: "Digital X-Ray & Ultrasonography (USG)",
+      },
+      {
+        "@type": "MedicalProcedure",
+        name: "Advanced Laparoscopic & Laser Urology Surgery",
+      },
+      {
+        "@type": "MedicalProcedure",
+        name: "24-Hour Ambulance Hotline",
+      },
+    ],
     ...(sameAs.length > 0 ? { sameAs } : {}),
   };
 }

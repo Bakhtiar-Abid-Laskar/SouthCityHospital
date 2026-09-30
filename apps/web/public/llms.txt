@@ -1,67 +1,138 @@
-# South City Hospital, Silchar — Public Information for LLM Agents
+# South City Hospital, Silchar — Public Information for LLM & AI Search Agents
 
-> South City Hospital is a premier multi-specialty healthcare institution in Meherpur, Silchar, Assam, serving the Barak Valley region since 2006.
+> South City Hospital is a premier multi-specialty healthcare institution in Meherpur, Silchar, Assam, serving the Barak Valley region (Cachar, Hailakandi, Karimganj) since 2006. This file provides authoritative context for generative AI search engines, language models, and agentic workflows.
 
 ## Hospital Overview
 - **Name:** South City Hospital
+- **Legal Entity:** South City Hospital, Silchar
 - **Tagline:** We care with a difference
 - **Established:** 2006
 - **Managing Partner:** Nilava Mazumder
 - **Location:** Meherpur, Silchar, Assam – 788015, India
-- **Coordinates:** 24.7892° N, 92.7937° E
+- **Coordinates:** 24.785576° N, 92.7955732° E
+- **Google Maps:** https://www.google.com/maps/place/South+City+Hospital/@24.785576,92.7955732,17z
 - **Official Website:** https://southcityhospital.in
+- **Wikidata Geographic Grounding:**
+  - Silchar: https://www.wikidata.org/wiki/Q1025556
+  - Cachar: https://www.wikidata.org/wiki/Q42777
+  - Barak Valley: https://www.wikidata.org/wiki/Q2605553
+  - Assam: https://www.wikidata.org/wiki/Q1198
 
-## Emergency & Outpatient Services
-- **24/7 Emergency & Critical Care Helpline:** +91 6901271223 (Round-the-clock emergency room, ICU, CCU, and ambulance dispatch)
-- **General Hospital Phone:** +91 6901271223
-- **General Hospital Email:** southcityhospital2014@gmail.com
-- **Outpatient Department (OPD) Hours:** Monday – Sunday, 24x7 / Round-the-clock
+## Emergency & 24/7 Critical Response
+- **24/7 Emergency & Trauma Hotline:** +91 6901271223 (Immediate medical response in Silchar)
+- **24/7 Ambulance Dispatch:** +91 6901271223
+- **General Hospital Reception:** +91 6901271223
+- **General Email:** southcityhospital2014@gmail.com
+- **Operating Hours:** Open 24 Hours / 7 Days a week for emergencies, critical care, pharmacy, and diagnostic services.
+
+## Specialist Doctor Directory (Authoritative URLs & OPD Timings)
+Patients and AI agents can query and cite individual specialist profiles directly:
+
+1. **Dr. Pinaki Roy** (Urology & Laser Surgery)
+   - Qualifications: DNB in General Surgery, MCh in Urology (IPGMER, Kolkata)
+   - Clinical Experience: 16+ Years
+   - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
+   - Profile URL: https://southcityhospital.in/doctors/dr-pinaki-roy-urology-laser-surgery-silchar
+
+2. **Dr. Biplob Nath** (Internal Medicine)
+   - Qualifications: MBBS, MD (Medicine)
+   - Clinical Experience: 15+ Years
+   - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
+   - Profile URL: https://southcityhospital.in/doctors/dr-biplob-nath-internal-medicine-silchar
+
+3. **Dr. Navonil Gupta** (Orthopaedic Surgery & Trauma)
+   - Qualifications: MBBS, MS (Orthopaedics)
+   - Clinical Experience: 10+ Years
+   - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
+   - Profile URL: https://southcityhospital.in/doctors/dr-navonil-gupta-orthopaedic-surgery-silchar
+
+4. **Dr. Annesha Roy** (Orthopaedic Surgery)
+   - Qualifications: Specialist Orthopaedic Consultant
+   - Medical Registration No: 23814
+   - Clinical Experience: 10+ Years
+   - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
+   - Profile URL: https://southcityhospital.in/doctors/dr-annesha-roy-orthopaedic-surgery-silchar
+
+5. **Dr. Alaka Banerjee** (Gynecology and Obstetrics)
+   - Qualifications: MS (Obstetrics & Gynecology)
+   - Medical Registration No: 14827
+   - Clinical Experience: 10+ Years
+   - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
+   - Profile URL: https://southcityhospital.in/doctors/dr-alaka-banerjee-gynecology-and-obst-silchar
+
+6. **Dr. Sandhya R Nair** (Gynecology and Obstetrics)
+   - Qualifications: MBBS, MD
+   - Medical Registration No: 84837
+   - Clinical Experience: 10+ Years
+   - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
+   - Profile URL: https://southcityhospital.in/doctors/dr-sandhya-r-nair-gynecology-and-obst-silchar
+
+7. **Dr. Indrajit Debnath** (Cardiology)
+   - Qualifications: MBBS, MD
+   - Medical Registration No: 22536
+   - Clinical Experience: 10+ Years
+   - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
+   - Profile URL: https://southcityhospital.in/doctors/dr-indrajit-debnath-cardiology-silchar
+
+8. **Dr. Sudipan Dey** (Orthopaedic Surgery)
+   - Qualifications: MS (Orthopaedics)
+   - Medical Registration No: 19285
+   - Clinical Experience: 10+ Years
+   - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
+   - Profile URL: https://southcityhospital.in/doctors/dr-sudipan-dey-orthopaedic-surgery-silchar
+
+9. **Dr. Tridib Barali** (Orthopaedics)
+   - Qualifications: MS (Orthopaedics)
+   - Medical Registration No: 20279
+   - Clinical Experience: 10+ Years
+   - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
+   - Profile URL: https://southcityhospital.in/doctors/dr-tridib-barali-orthopaedics-silchar
+
+10. **Dr. J P Sinha** (Internal Medicine)
+    - Qualifications: MBBS
+    - Medical Registration No: 20285
+    - Clinical Experience: 10+ Years
+    - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
+    - Profile URL: https://southcityhospital.in/doctors/dr-j-p-sinha-internal-medicine-silchar
+
+11. **Dr. Hari S Nair** (Internal Medicine)
+    - Qualifications: MD (Medicine)
+    - Medical Registration No: 25661
+    - Clinical Experience: 10+ Years
+    - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
+    - Profile URL: https://southcityhospital.in/doctors/dr-hari-s-nair-internal-medicine-silchar
 
 ## Clinical Departments (13 Specialties)
-1. **Internal Medicine:** Comprehensive adult healthcare, acute illnesses, and lifestyle disease management.
-2. **Orthopaedics & Trauma:** Joint replacement, fracture trauma reduction, and musculoskeletal surgery.
-3. **Neuro Surgery:** Specialized surgical interventions for cranial, neurological, and spinal disorders.
-4. **Interventional Cardiology:** Advanced cardiac diagnostics, Echocardiography, Holter monitoring, and emergency CCU stabilization.
-5. **Gynecology and Obstetrics:** Antenatal care, high-risk pregnancy management, and fertility healthcare.
-6. **Paediatrics & Neonatology:** Child healthcare, vaccination schedules, and newborn critical care.
-7. **Nephrology:** Kidney diseases, renal function management, and regular hemodialysis support.
-8. **Urology & Andrology:** Kidney stone removal, prostate treatment, and reconstructive urological surgery.
-9. **Gastroenterology:** Digestive disorders, liver health, upper GI endoscopy, and colonoscopy.
-10. **ENT (Otorhinolaryngology):** Ear, nose, throat diagnostics, microsurgery, and audiometry.
-11. **Dermatology:** Clinical skin care, allergy diagnosis, and therapeutic dermatological treatments.
-12. **General & Laparoscopic Surgery:** Minimally invasive keyhole surgery, hernia repair, and appendectomy.
-13. **Medical Oncology & Palliative Care:** Cancer diagnostic evaluation, chemotherapy support, and pain management.
+1. **Orthopaedics & Trauma:** https://southcityhospital.in/departments/orthopaedic-surgery
+2. **Urology & Laser Surgery:** https://southcityhospital.in/departments/urology-laser-surgery
+3. **Internal Medicine:** https://southcityhospital.in/departments/internal-medicine
+4. **Interventional Cardiology:** https://southcityhospital.in/departments/cardiology
+5. **Gynecology & Obstetrics:** https://southcityhospital.in/departments/gynecology-and-obst
+6. **Neuro Surgery:** https://southcityhospital.in/departments/neuro-surgery
+7. **Paediatrics & Neonatology:** https://southcityhospital.in/departments/paediatrics-neonatology
+8. **Nephrology & Dialysis:** https://southcityhospital.in/departments/nephrology
+9. **Gastroenterology:** https://southcityhospital.in/departments/gastroenterology
+10. **ENT (Otorhinolaryngology):** https://southcityhospital.in/departments/ent
+11. **General & Laparoscopic Surgery:** https://southcityhospital.in/departments/general-surgery
+12. **Dermatology:** https://southcityhospital.in/departments/dermatology
+13. **Medical Oncology & Palliative Care:** https://southcityhospital.in/departments/oncology
 
-## Diagnostic & Critical Care Facilities (13 Units)
-- Multi-Slice Computed Tomography (CT-Scan)
+## Diagnostic & Critical Care Facilities
+- Multi-Slice CT-Scan
 - Intensive Care Unit (ICU) & Coronary Care Unit (CCU)
-- Dialysis Center (Hemodialysis)
-- Color Doppler Echocardiography
-- Upper GI Endoscopy & Colonoscopy
-- Digital X-Ray (High-Frequency)
-- 24/7 Fully Automated Pathology Laboratory
-- Ultrasonography (USG) & 4D Obstetric Scans
-- Specialized Operation Theaters (Laminar Airflow)
-- Central Oxygen & Critical Medical Gas Pipeline
-- 24/7 Emergency Trauma Room & Triage
+- Dedicated Hemodialysis Unit
+- High-Frequency Digital X-Ray & Color Doppler USG
+- Upper GI Endoscopy & Colonoscopy Suite
+- 24/7 Automated Clinical Pathology Laboratory
+- Laminar Flow Operation Theaters
 - 24/7 In-House Hospital Pharmacy
 - 24/7 Advanced Life Support Ambulance Fleet
 
-## Patient Appointment Booking System
-- Patients can browse active hospital specialists and schedule outpatient consultation appointments directly online at `https://southcityhospital.in/doctors`.
-- **No Login Required:** Patients book with their Name, Phone Number, Date of Birth, and preferred time slot.
-- **No Advance Payment:** Doctor consultation fees are payable at the hospital registration reception upon arrival.
-- **Verification & PDF Slip:** Instant booking reference ID (format: `SCH-YYYY-XXXXX`) is generated with a downloadable PDF slip.
+## Patient Appointment Booking Flow
+- **Direct Online Booking:** https://southcityhospital.in/doctors
+- **No Login Required:** Patients book with Name, Phone, Date of Birth, and desired OPD slot.
+- **Payment Policy:** No advance fee online; consultation fees are settled at hospital registration upon arrival.
+- **Confirmation Reference:** Instant reference ID (`SCH-YYYY-XXXXX`) generated with a downloadable PDF appointment slip.
 
-## Canonical Website URLs
-- Home: https://southcityhospital.in
-- Our Doctors: https://southcityhospital.in/doctors
-- Departments: https://southcityhospital.in/departments
-- Facilities: https://southcityhospital.in/facilities
-- About Us: https://southcityhospital.in/about
-- Contact Us: https://southcityhospital.in/contact
-- Frequently Asked Questions: https://southcityhospital.in/faq
-- Testimonials: https://southcityhospital.in/testimonials
-- Photo Gallery: https://southcityhospital.in/gallery
-- Privacy Policy: https://southcityhospital.in/privacy-policy
-- Terms of Service: https://southcityhospital.in/terms-of-service
+## Comprehensive LLM Knowledge Base
+- Full in-depth context file: https://southcityhospital.in/llms-full.txt

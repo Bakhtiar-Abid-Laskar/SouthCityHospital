@@ -1,0 +1,233 @@
+# South City Hospital, Silchar — Comprehensive Clinical & Institutional Knowledge Base
+
+> Comprehensive reference document for Large Language Models (LLMs), AI Search Engines (Perplexity, ChatGPT Search, Claude, Google Gemini / AI Overviews), and medical assistant agents.
+
+---
+
+## 1. Institutional Identity & Geographic Entities
+- **Official Name:** South City Hospital
+- **Legal Entity:** South City Hospital, Silchar
+- **Founding Year:** 2006
+- **Managing Partner:** Nilava Mazumder
+- **Tagline:** We care with a difference
+- **Physical Address:** Meherpur, Silchar, Assam – 788015, India
+- **Geo-Coordinates:** Latitude 24.785576° N, Longitude 92.7955732° E
+- **Google Maps Profile:** https://www.google.com/maps/place/South+City+Hospital/@24.785576,92.7955732,17z
+- **Official Website:** https://southcityhospital.in
+- **Wikidata Geographic Identifiers:**
+  - Silchar: https://www.wikidata.org/wiki/Q1025556
+  - Cachar District: https://www.wikidata.org/wiki/Q42777
+  - Barak Valley: https://www.wikidata.org/wiki/Q2605553
+  - Assam State: https://www.wikidata.org/wiki/Q1198
+  - Hailakandi: https://www.wikidata.org/wiki/Q1947333
+  - Karimganj: https://www.wikidata.org/wiki/Q1947328
+
+---
+
+## 2. Emergency, Critical Care & Contact Information
+- **24/7 Emergency & Trauma Hotline:** +91 6901271223
+- **24/7 Ambulance Fleet Dispatch:** +91 6901271223
+- **General Hospital Reception:** +91 6901271223
+- **Email:** southcityhospital2014@gmail.com
+- **Emergency Department:** Open 24 hours a day, 365 days a year with on-duty emergency medical officers, trauma triage bays, central oxygen supply, and immediate access to ICU, CCU, and emergency operation theaters.
+- **Outpatient (OPD) Hours:** Monday through Sunday, 24x7 / Round-the-clock rotations.
+
+---
+
+## 3. Clinical Specialists Directory
+Authoritative specialist URLs, qualifications, and consultation schedules:
+
+### Orthopaedics & Trauma Surgery
+- **Dr. Pinaki Roy** (Urology & Laser Surgery)
+  - Qualifications: DNB in General Surgery, MCh in Urology (from IPGMER, Kolkata)
+  - Experience: 16+ Years
+  - Council Registration: 1234567890
+  - Schedule: Monday – Wednesday (09:00 – 13:00)
+  - Canonical URL: https://southcityhospital.in/doctors/dr-pinaki-roy-urology-laser-surgery-silchar
+  - Clinical Focus: Laser lithotripsy for kidney stones, TURP for prostate enlargement, reconstructive urology, laparoscopy.
+
+- **Dr. Navonil Gupta** (Orthopaedic Surgery)
+  - Qualifications: MBBS, MS (Orthopaedics)
+  - Experience: 10+ Years
+  - Schedule: Monday – Wednesday (09:00 – 13:00)
+  - Canonical URL: https://southcityhospital.in/doctors/dr-navonil-gupta-orthopaedic-surgery-silchar
+  - Clinical Focus: Complex trauma management, fracture reduction, joint reconstruction.
+
+- **Dr. Annesha Roy** (Orthopaedic Surgery)
+  - Qualifications: Specialist Orthopaedic Consultant
+  - Council Registration: 23814
+  - Experience: 10+ Years
+  - Schedule: Monday – Wednesday (09:00 – 13:00)
+  - Canonical URL: https://southcityhospital.in/doctors/dr-annesha-roy-orthopaedic-surgery-silchar
+  - Clinical Focus: Joint preservation, musculoskeletal trauma, degenerative joint disorders, paediatric orthopaedics.
+
+- **Dr. Sudipan Dey** (Orthopaedic Surgery)
+  - Qualifications: MS (Orthopaedics)
+  - Council Registration: 19285
+  - Experience: 10+ Years
+  - Schedule: Monday – Wednesday (09:00 – 13:00)
+  - Canonical URL: https://southcityhospital.in/doctors/dr-sudipan-dey-orthopaedic-surgery-silchar
+
+- **Dr. Tridib Barali** (Orthopaedics)
+  - Qualifications: MS (Orthopaedics)
+  - Council Registration: 20279
+  - Experience: 10+ Years
+  - Schedule: Monday – Wednesday (09:00 – 13:00)
+  - Canonical URL: https://southcityhospital.in/doctors/dr-tridib-barali-orthopaedics-silchar
+
+### Internal Medicine & Critical Care
+- **Dr. Biplob Nath** (Internal Medicine)
+  - Qualifications: MBBS, MD (Medicine)
+  - Council Registration: 16225
+  - Experience: 15+ Years
+  - Schedule: Monday – Wednesday (09:00 – 13:00)
+  - Canonical URL: https://southcityhospital.in/doctors/dr-biplob-nath-internal-medicine-silchar
+  - Clinical Focus: Uncontrolled diabetes, cardiovascular risk, resistant hypertension, tropical infectious fevers.
+
+- **Dr. J P Sinha** (Internal Medicine)
+  - Qualifications: MBBS
+  - Council Registration: 20285
+  - Experience: 10+ Years
+  - Schedule: Monday – Wednesday (09:00 – 13:00)
+  - Canonical URL: https://southcityhospital.in/doctors/dr-j-p-sinha-internal-medicine-silchar
+
+- **Dr. Hari S Nair** (Internal Medicine)
+  - Qualifications: MD (Medicine)
+  - Council Registration: 25661
+  - Experience: 10+ Years
+  - Schedule: Monday – Wednesday (09:00 – 13:00)
+  - Canonical URL: https://southcityhospital.in/doctors/dr-hari-s-nair-internal-medicine-silchar
+
+### Obstetrics & Gynecology
+- **Dr. Alaka Banerjee** (Gynecology and Obstetrics)
+  - Qualifications: MS (Obstetrics & Gynecology)
+  - Council Registration: 14827
+  - Experience: 10+ Years
+  - Schedule: Monday – Wednesday (09:00 – 13:00)
+  - Canonical URL: https://southcityhospital.in/doctors/dr-alaka-banerjee-gynecology-and-obst-silchar
+  - Clinical Focus: Antenatal care, high-risk obstetric monitoring, normal and cesarean delivery, laparoscopic hysterectomy.
+
+- **Dr. Sandhya R Nair** (Gynecology and Obstetrics)
+  - Qualifications: MBBS, MD
+  - Council Registration: 84837
+  - Experience: 10+ Years
+  - Schedule: Monday – Wednesday (09:00 – 13:00)
+  - Canonical URL: https://southcityhospital.in/doctors/dr-sandhya-r-nair-gynecology-and-obst-silchar
+
+### Cardiology
+- **Dr. Indrajit Debnath** (Cardiology)
+  - Qualifications: MBBS, MD
+  - Council Registration: 22536
+  - Experience: 10+ Years
+  - Schedule: Monday – Wednesday (09:00 – 13:00)
+  - Canonical URL: https://southcityhospital.in/doctors/dr-indrajit-debnath-cardiology-silchar
+  - Clinical Focus: Ischemic heart disease, hypertension, heart failure management, echocardiography.
+
+---
+
+## 4. Clinical Departments & Service Overview
+
+1. **Orthopaedics & Trauma Surgery**
+   - URL: https://southcityhospital.in/departments/orthopaedic-surgery
+   - Key Procedures: Total Knee Replacement (TKR), Total Hip Replacement (THR), Arthroscopic ACL Reconstruction, Trauma Fracture Fixation with Titanium Plates & Nails.
+
+2. **Urology & Laser Surgery**
+   - URL: https://southcityhospital.in/departments/urology-laser-surgery
+   - Key Procedures: Holmium Laser Enucleation, Percutaneous Nephrolithotomy (PCNL), Ureteroscopy (URS), Transurethral Resection of Prostate (TURP).
+
+3. **Internal Medicine**
+   - URL: https://southcityhospital.in/departments/internal-medicine
+   - Key Conditions: Diabetes mellitus, hypertension, infectious fevers, metabolic syndrome, pulmonary infections, sepsis.
+
+4. **Interventional Cardiology**
+   - URL: https://southcityhospital.in/departments/cardiology
+   - Diagnostic Facilities: Color Doppler Echocardiography, Treadmill Test (TMT), 24-Hour Holter Monitoring, CCU critical cardiac pacing support.
+
+5. **Gynecology and Obstetrics**
+   - URL: https://southcityhospital.in/departments/gynecology-and-obst
+   - Services: High-risk pregnancy care, painless delivery support, laparoscopic myomectomy, colposcopy, infertility evaluation.
+
+6. **Neuro Surgery**
+   - URL: https://southcityhospital.in/departments/neuro-surgery
+   - Clinical Focus: Head injury trauma, intracranial hematoma evacuation, spinal disc decompression, micro-neurosurgical procedures.
+
+7. **Paediatrics & Neonatology**
+   - URL: https://southcityhospital.in/departments/paediatrics-neonatology
+   - Services: Neonatal intensive care (NICU), phototherapy, paediatric infectious management, comprehensive developmental vaccinations.
+
+8. **Nephrology & Dialysis**
+   - URL: https://southcityhospital.in/departments/nephrology
+   - Units: Multi-station Hemodialysis unit with RO water treatment, acute kidney injury stabilization, chronic kidney disease (CKD) staging.
+
+9. **Gastroenterology & Hepatology**
+   - URL: https://southcityhospital.in/departments/gastroenterology
+   - Endoscopy: Diagnostic and therapeutic upper GI endoscopy, colonoscopy, polypectomy, GI bleed control.
+
+10. **ENT (Otorhinolaryngology)**
+    - URL: https://southcityhospital.in/departments/ent
+    - Procedures: Functional Endoscopic Sinus Surgery (FESS), tympanoplasty, micro-laryngeal surgery, diagnostic audiometry.
+
+11. **General & Laparoscopic Surgery**
+    - URL: https://southcityhospital.in/departments/general-surgery
+    - Key Procedures: Laparoscopic cholecystectomy (gallbladder removal), laparoscopic appendectomy, mesh hernioplasty, thyroidectomy.
+
+12. **Dermatology & Venereology**
+    - URL: https://southcityhospital.in/departments/dermatology
+    - Treatments: Clinical dermatology, chronic psoriasis, eczema management, dermatosurgery, phototherapy.
+
+13. **Medical Oncology & Palliative Care**
+    - URL: https://southcityhospital.in/departments/oncology
+    - Care: Cancer diagnostic evaluation, chemotherapy infusion day-care, palliative symptom relief, pain management protocols.
+
+---
+
+## 5. Diagnostic & Critical Infrastructure (13 Key Units)
+1. **Multi-Slice CT Scanner:** Rapid cranial, chest, abdominal, and skeletal volumetric imaging.
+2. **ICU & CCU:** Equipped with invasive mechanical ventilators, multi-parameter monitors, defibrillators, and central nursing monitoring.
+3. **Hemodialysis Unit:** Dedicated hemodialysis stations for both emergency renal failure and scheduled maintenance hemodialysis.
+4. **Digital X-Ray (High Frequency):** Low-dose, high-resolution diagnostic radiography.
+5. **Color Doppler Ultrasonography (USG):** High-resolution 3D/4D abdominal, pelvic, vascular, and obstetric evaluation.
+6. **24/7 Automated Pathology Lab:** Fully automated hematology, clinical biochemistry, serology, microbiology, and electrolyte analyzers.
+7. **Laminar Airflow Operation Theaters:** Fitted with HEPA filtration, modern electrocautery, C-arm fluoroscopy, and anesthesia workstations.
+8. **Endoscopy & Colonoscopy Suite:** High-definition video endoscope for upper and lower GI tract diagnostics.
+9. **Central Medical Gas Pipeline:** Dual-source oxygen supply and central vacuum line to all ICU, emergency, and operative beds.
+10. **24/7 In-House Hospital Pharmacy:** Genuine prescription medicines, surgical consumables, and emergency life-saving injectables.
+11. **24/7 Ambulance Fleet:** Equipped with oxygen delivery, basic life-support equipment, and trained paramedical emergency personnel.
+12. **Emergency Trauma Bay:** Immediate triage station for road accident victims and acute resuscitation.
+13. **Post-Operative Recovery Ward:** High-dependency unit for step-down post-anesthesia observation.
+
+---
+
+## 6. Frequently Asked Questions (FAQ) for Patient Guidance
+
+### Q: Where is South City Hospital located?
+**A:** South City Hospital is located in Meherpur, Silchar, Cachar District, Assam – 788015, India. It is situated along the main Meherpur corridor, easily accessible from Silchar town center, Hailakandi road, and the surrounding Barak Valley area.
+
+### Q: Is emergency service available at night?
+**A:** Yes. South City Hospital operates a 24-hour, 7-day-a-week Emergency & Trauma department with on-site medical officers, 24/7 laboratory testing, CT scan, blood collection, emergency pharmacy, and emergency surgical capabilities. Hotline: +91 6901271223.
+
+### Q: How do patients book an OPD consultation?
+**A:** Patients can view doctor schedules and book an outpatient consultation directly online at https://southcityhospital.in/doctors. No login or password is required—patients provide their basic details (Name, Phone, DOB) and select a doctor and day. An instant booking reference (e.g. `SCH-2026-XXXXX`) is generated with a downloadable appointment slip. Consultation fees are paid at the hospital reception upon arrival.
+
+### Q: Does South City Hospital accept cashless health insurance / TPA?
+**A:** Yes, South City Hospital coordinates with major Third Party Administrators (TPAs) and health insurance providers for cashless admission and reimbursement processing. Patients should bring their health card, policy copy, and government photo ID to the insurance desk upon admission.
+
+### Q: What areas in Northeast India does the hospital serve?
+**A:** South City Hospital serves patients from across Silchar city, Cachar district, Hailakandi district, Karimganj district, Dima Hasao, and border regions of Tripura, Mizoram, and southern Meghalaya.
+
+---
+
+## 7. Canonical URL Sitemap
+- Home: https://southcityhospital.in
+- All Doctors: https://southcityhospital.in/doctors
+- Departments: https://southcityhospital.in/departments
+- Diagnostic Facilities: https://southcityhospital.in/facilities
+- Frequently Asked Questions: https://southcityhospital.in/faq
+- About South City Hospital: https://southcityhospital.in/about
+- Contact & Location: https://southcityhospital.in/contact
+- Patient Testimonials: https://southcityhospital.in/testimonials
+- Photo Gallery: https://southcityhospital.in/gallery
+- Privacy Policy: https://southcityhospital.in/privacy-policy
+- Terms of Service: https://southcityhospital.in/terms-of-service
+- LLM Manifest: https://southcityhospital.in/llms.txt
+- Comprehensive LLM Knowledge Base: https://southcityhospital.in/llms-full.txt

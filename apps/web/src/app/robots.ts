@@ -11,6 +11,11 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: ["/api/", "/admin/", "/staff/", "/booking-status"],
       },
+      {
+        userAgent: ["GPTBot", "PerplexityBot", "ClaudeBot", "Google-Extended", "CCBot"],
+        allow: ["/", "/doctors/", "/departments/", "/facilities", "/faq", "/about", "/contact", "/llms.txt", "/llms-full.txt"],
+        disallow: ["/api/", "/admin/", "/staff/", "/booking-status"],
+      },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
   };

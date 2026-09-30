@@ -21,7 +21,25 @@ export const hospital = {
     city: "Silchar",
     state: "Assam",
     pincode: "788015",
+    geo: {
+      latitude: "24.785576",
+      longitude: "92.7955732",
+    },
   },
+  geoEntities: {
+    silcharWikidata: "https://www.wikidata.org/wiki/Q1025556",
+    silcharWikipedia: "https://en.wikipedia.org/wiki/Silchar",
+    cacharWikidata: "https://www.wikidata.org/wiki/Q42777",
+    barakValleyWikidata: "https://www.wikidata.org/wiki/Q2605553",
+    assamWikidata: "https://www.wikidata.org/wiki/Q1198",
+  },
+  areasServed: [
+    { name: "Silchar", sameAs: "https://www.wikidata.org/wiki/Q1025556", type: "City" },
+    { name: "Cachar", sameAs: "https://www.wikidata.org/wiki/Q42777", type: "AdministrativeArea" },
+    { name: "Hailakandi", sameAs: "https://www.wikidata.org/wiki/Q1947333", type: "AdministrativeArea" },
+    { name: "Karimganj", sameAs: "https://www.wikidata.org/wiki/Q1947328", type: "AdministrativeArea" },
+    { name: "Barak Valley", sameAs: "https://www.wikidata.org/wiki/Q2605553", type: "AdministrativeArea" },
+  ],
   contact: {
     phone: "+91 6901271223",
     emergency: "+91 6901271223",
