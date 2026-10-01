@@ -28,6 +28,7 @@ import { useDoctors, saveDoctor, deleteDoctor, clearAllDoctors } from "@/service
 import { uploadDoctorAvatar } from "@/services/storage";
 import { useDepartments } from "@/services/departments";
 import type { Doctor, UserRole } from "@sch/types";
+import { getDoctorProfileUrl } from "@/lib/site-url";
 
 function getDoctorInitials(name: string): string {
   const clean = name.replace(/^dr\.?\s+/i, "").trim();
@@ -439,18 +440,32 @@ export default function AdminDoctorsPage() {
                         <span className="text-[var(--slate)] truncate font-mono text-[10px]">
                           /doctors/{doc.slug || "auto-generated"}
                         </span>
-                        {doc.slug && (
-                          <a
-                            href={`${process.env.NEXT_PUBLIC_SITE_URL || "https://southcityhospital.in"}/doctors/${doc.slug}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-[var(--primary)] hover:underline inline-flex items-center gap-1 font-semibold shrink-0"
-                            title="Open live public profile"
-                          >
-                            <span>Live Profile</span>
-                            <ExternalLink size={11} />
-                          </a>
-                        )}
+                        {(() => {
+                          const profileUrl = getDoctorProfileUrl(
+                            doc.slug,
+                            doc.isActive ?? doc.active
+                          );
+                          return profileUrl ? (
+                            <a
+                              href={profileUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[var(--primary)] hover:underline inline-flex items-center gap-1 font-semibold shrink-0"
+                              title={`Open live public profile: ${profileUrl}`}
+                            >
+                              <span>Live Profile</span>
+                              <ExternalLink size={11} />
+                            </a>
+                          ) : doc.slug ? (
+                            <span
+                              className="text-[var(--slate)] inline-flex items-center gap-1 text-[10px] shrink-0"
+                              title="Doctor is inactive — profile not publicly visible"
+                            >
+                              <span>Inactive</span>
+                              <ExternalLink size={11} className="opacity-40" />
+                            </span>
+                          ) : null;
+                        })()}
                       </div>
                     </div>
                   </div>
