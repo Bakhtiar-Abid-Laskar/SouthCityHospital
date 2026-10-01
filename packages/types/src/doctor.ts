@@ -59,6 +59,17 @@ export interface ConsultationSchedule {
   endTime: string;
 }
 
+export interface DoctorEducation {
+  degree: string;
+  institution: string;
+  year?: string | number;
+}
+
+export interface DoctorFAQ {
+  question: string;
+  answer: string;
+}
+
 export interface Doctor {
   id: string;
   name: string;
@@ -76,6 +87,8 @@ export interface Doctor {
   slug?: string;
   expertise?: string[];
   conditionsTreated?: string[];
+  education?: DoctorEducation[];
+  faqs?: DoctorFAQ[];
   seoTitle?: string | null;
   seoDescription?: string | null;
   isActive?: boolean;

@@ -53,7 +53,94 @@ function buildOpeningHours(schedules: Doctor["consultationSchedule"]) {
 }
 
 /**
- * Builds standard Schema.org Physician JSON-LD representation.
+ * Generates authoritative, geo-targeted FAQs for Google Rich Results (FAQPage) and AI Engines (ChatGPT, Gemini, Perplexity).
+ * If the doctor already has custom FAQs, they are preserved; otherwise or in addition,
+ * high-converting local intent questions are automatically generated.
+ */
+export function getAuthoritativeDoctorFaqs(
+  doctor: Doctor,
+  specialtyName: string
+): Array<{ question: string; answer: string }> {
+  const cleanName = doctor.name.replace(/\s+/g, " ").trim();
+  const displayName = cleanName.startsWith("Dr.") ? cleanName : `Dr. ${cleanName}`;
+
+  const scheduleText =
+    doctor.consultationSchedule && doctor.consultationSchedule.length > 0
+      ? doctor.consultationSchedule
+          .map((s) => `${s.day} from ${s.startTime || "09:00"} to ${s.endTime || "13:00"}`)
+          .join(", ")
+      : "Monday to Saturday during hospital OPD hours";
+
+  const expText =
+    doctor.experienceYears > 0
+      ? `with over ${doctor.experienceYears} years of clinical experience`
+      : "with extensive clinical expertise";
+  const qualText =
+    doctor.qualifications && doctor.qualifications.length > 0
+      ? ` (${doctor.qualifications.join(", ")})`
+      : "";
+  const expertiseText =
+    doctor.expertise && doctor.expertise.length > 0
+      ? doctor.expertise.join(", ")
+      : `${specialtyName} consultations, diagnosis, clinical evaluation, and specialized medical treatments`;
+
+  const defaultFaqs = [
+    {
+      question: `Where does ${displayName} consult patients in Silchar?`,
+      answer: `${displayName} consults patients at South City Hospital, located in Meherpur, Silchar, Cachar, Assam (PIN: 788015). South City Hospital is a premier multi-specialty healthcare institution equipped with modern diagnostic facilities, in-house pharmacy, and 24/7 emergency response.`,
+    },
+    {
+      question: `What are the OPD consultation timings and chamber days for ${displayName}?`,
+      answer: `${displayName}${qualText} is available for outpatient consultations at South City Hospital on: ${scheduleText}. Timings are subject to surgical rotations and emergency duties; for today’s live OPD token status, please call hospital reception at ${hospital.contact.phone}.`,
+    },
+    {
+      question: `How can I book an appointment with ${displayName} in Silchar?`,
+      answer: `You can book an appointment with ${displayName} online through the official South City Hospital website at ${SITE_URL}/doctors/${doctor.slug}, or by calling the hospital desk directly at ${hospital.contact.phone} or emergency hotline at ${hospital.contact.emergency}. Walk-in registrations are also available at the Meherpur reception desk.`,
+    },
+    {
+      question: `What medical conditions and treatments does ${displayName} specialize in?`,
+      answer: `${displayName} specializes in ${specialtyName} ${expText}. Key clinical areas of focus include: ${expertiseText}. Consultations include comprehensive patient assessment, evidence-based diagnoses, and personalized treatment plans.`,
+    },
+    {
+      question: `Can patients from outside Silchar (Hailakandi, Karimganj, Barak Valley, Mizoram) consult ${displayName}?`,
+      answer: `Yes. Patients from across Cachar, Hailakandi, Karimganj, Dima Hasao, Mizoram, and Tripura regularly travel to South City Hospital in Meherpur, Silchar for consultation with ${displayName}. The hospital provides prioritized outpatient services and complete emergency admission support.`,
+    },
+  ];
+
+  // If doctor has custom FAQs, merge them with non-duplicate defaults
+  if (doctor.faqs && doctor.faqs.length > 0) {
+    const customQuestions = new Set(doctor.faqs.map((f) => f.question.toLowerCase().trim()));
+    const remainingDefaults = defaultFaqs.filter(
+      (f) => !customQuestions.has(f.question.toLowerCase().trim())
+    );
+    return [...doctor.faqs, ...remainingDefaults];
+  }
+
+  return defaultFaqs;
+}
+
+/**
+ * Builds Schema.org FAQPage JSON-LD representation for Google Rich Snippets & AI answers.
+ */
+export function buildDoctorFaqSchema(faqs: Array<{ question: string; answer: string }>) {
+  if (!faqs || faqs.length === 0) return null;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: f.answer,
+      },
+    })),
+  };
+}
+
+/**
+ * Builds standard Schema.org Physician JSON-LD representation with deep Geo, LocalBusiness, and AI Knowledge Graph anchoring.
  */
 export function buildPhysicianSchema(
   doctor: Doctor,
@@ -62,15 +149,56 @@ export function buildPhysicianSchema(
   description: string
 ) {
   const cleanName = doctor.name.replace(/\s+/g, " ").trim();
+  const rawName = cleanName.replace(/^Dr\.\s*/i, "");
   const displayName = cleanName.startsWith("Dr.") ? cleanName : `Dr. ${cleanName}`;
+
+  // Alternate names to capture all Google and AI search permutations
+  const alternateNames = [
+    cleanName,
+    rawName,
+    `${displayName} Silchar`,
+    `${rawName} Silchar`,
+    `${displayName} South City Hospital`,
+    `${rawName} South City Hospital`,
+    `${rawName} Doctor Silchar`,
+    `${specialtyOrDepartment(departmentName)} in Silchar`,
+  ].filter((name, idx, arr) => arr.indexOf(name) === idx);
+
+  // Qualifications mapped to EducationalOccupationalCredential
+  const credentials = (doctor.qualifications || []).map((q) => ({
+    "@type": "EducationalOccupationalCredential",
+    credentialCategory: "degree",
+    name: q,
+  }));
+
+  // Education background mapped to EducationalOrganization
+  const alumni = (doctor.education || []).map((e) => ({
+    "@type": "EducationalOrganization",
+    name: e.institution,
+  }));
+
+  // Areas of expertise / conditions treated
+  const knowsAbout =
+    doctor.expertise && doctor.expertise.length > 0
+      ? doctor.expertise
+      : [departmentName, `${departmentName} diagnosis and treatment`, "Outpatient Clinical Care"];
 
   const schema: Record<string, any> = {
     "@context": "https://schema.org",
-    "@type": "Physician",
+    "@type": ["Physician", "MedicalBusiness"],
+    "@id": `${canonicalUrl}#physician`,
     name: displayName,
+    alternateName: alternateNames,
+    honorificPrefix: "Dr.",
+    jobTitle: `${departmentName} Specialist & Consultant`,
     url: canonicalUrl,
+    mainEntityOfPage: canonicalUrl,
     medicalSpecialty: departmentName,
     telephone: hospital.contact.phone,
+    priceRange: "₹₹",
+    currenciesAccepted: "INR",
+    paymentAccepted: "Cash, UPI, Credit Card, Debit Card, Net Banking, Health Insurance",
+    isAcceptingNewPatients: true,
     address: {
       "@type": "PostalAddress",
       streetAddress: hospital.location.area,
@@ -89,11 +217,12 @@ export function buildPhysicianSchema(
       name: a.name,
       sameAs: a.sameAs,
     })),
-    isAcceptingNewPatients: true,
+    knowsAbout,
     worksFor: {
       "@type": "Hospital",
       "@id": `${SITE_URL}/#hospital`,
       name: hospital.name,
+      legalName: `${hospital.name}, Silchar`,
       url: SITE_URL,
       telephone: hospital.contact.emergency,
       address: {
@@ -104,7 +233,28 @@ export function buildPhysicianSchema(
         postalCode: hospital.location.pincode,
         addressCountry: "IN",
       },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: hospital.location.geo.latitude,
+        longitude: hospital.location.geo.longitude,
+      },
     },
+    hospitalAffiliation: {
+      "@type": "Hospital",
+      "@id": `${SITE_URL}/#hospital`,
+      name: hospital.name,
+      url: SITE_URL,
+    },
+    availableService: [
+      {
+        "@type": "MedicalProcedure",
+        name: `${departmentName} Outpatient Consultation`,
+      },
+      ...(doctor.expertise || []).map((exp) => ({
+        "@type": "MedicalProcedure",
+        name: exp,
+      })),
+    ],
   };
 
   if (description) {
@@ -113,6 +263,14 @@ export function buildPhysicianSchema(
 
   if (doctor.photoUrl) {
     schema.image = doctor.photoUrl;
+  }
+
+  if (credentials.length > 0) {
+    schema.hasCredential = credentials;
+  }
+
+  if (alumni.length > 0) {
+    schema.alumniOf = alumni;
   }
 
   const hours = buildOpeningHours(doctor.consultationSchedule);
@@ -133,6 +291,11 @@ export function buildPhysicianSchema(
   }
 
   return schema;
+}
+
+function specialtyOrDepartment(dept: string): string {
+  if (dept.toLowerCase().includes("specialist")) return dept;
+  return `${dept} Specialist`;
 }
 
 /**

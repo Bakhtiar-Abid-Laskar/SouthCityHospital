@@ -28,79 +28,89 @@
 ## Specialist Doctor Directory (Authoritative URLs & OPD Timings)
 Patients and AI agents can query and cite individual specialist profiles directly:
 
-1. **Dr. Pinaki Roy** (Urology & Laser Surgery)
-   - Qualifications: DNB in General Surgery, MCh in Urology (IPGMER, Kolkata)
-   - Clinical Experience: 16+ Years
-   - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
-   - Profile URL: https://southcityhospital.in/doctors/dr-pinaki-roy-urology-laser-surgery-silchar
-
-2. **Dr. Biplob Nath** (Internal Medicine)
-   - Qualifications: MBBS, MD (Medicine)
-   - Clinical Experience: 15+ Years
-   - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
-   - Profile URL: https://southcityhospital.in/doctors/dr-biplob-nath-internal-medicine-silchar
-
-3. **Dr. Navonil Gupta** (Orthopaedic Surgery & Trauma)
-   - Qualifications: MBBS, MS (Orthopaedics)
+1. **Dr. Annesha Roy** (orthopaedic-surgery)
+   - Qualifications: MS
    - Clinical Experience: 10+ Years
-   - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
-   - Profile URL: https://southcityhospital.in/doctors/dr-navonil-gupta-orthopaedic-surgery-silchar
-
-4. **Dr. Annesha Roy** (Orthopaedic Surgery)
-   - Qualifications: Specialist Orthopaedic Consultant
    - Medical Registration No: 23814
-   - Clinical Experience: 10+ Years
-   - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
+   - OPD Schedule: Monday–Wednesday (09:00 – 13:00)
    - Profile URL: https://southcityhospital.in/doctors/dr-annesha-roy-orthopaedic-surgery-silchar
 
-5. **Dr. Alaka Banerjee** (Gynecology and Obstetrics)
-   - Qualifications: MS (Obstetrics & Gynecology)
-   - Medical Registration No: 14827
+2. **Dr. Alaka Banerjee** (gynecology-and-obst)
+   - Qualifications: MS
    - Clinical Experience: 10+ Years
-   - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
+   - Medical Registration No: 14827
+   - OPD Schedule: Monday–Wednesday (09:00 – 13:00)
    - Profile URL: https://southcityhospital.in/doctors/dr-alaka-banerjee-gynecology-and-obst-silchar
 
-6. **Dr. Sandhya R Nair** (Gynecology and Obstetrics)
-   - Qualifications: MBBS, MD
-   - Medical Registration No: 84837
+3. **Dr. Anshuman Dutta** (orthopaedic-surgery)
+   - Qualifications: MS, ORTHO
    - Clinical Experience: 10+ Years
-   - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
-   - Profile URL: https://southcityhospital.in/doctors/dr-sandhya-r-nair-gynecology-and-obst-silchar
+   - Medical Registration No: 14745
+   - OPD Schedule: Monday–Wednesday (09:00 – 13:00)
+   - Profile URL: https://southcityhospital.in/doctors/dr-anshuman-dutta-orthopaedic-surgery-silchar
 
-7. **Dr. Indrajit Debnath** (Cardiology)
-   - Qualifications: MBBS, MD
-   - Medical Registration No: 22536
+4. **Dr. Biplob Nath** (internal-medicine)
+   - Qualifications: MBBS, MD (Medicine)
+   - Clinical Experience: 15+ Years
+   - Medical Registration No: 16225
+   - OPD Schedule: Monday–Wednesday (09:00 – 13:00)
+   - Profile URL: https://southcityhospital.in/doctors/dr-biplob-nath-internal-medicine-silchar
+
+5. **Dr. Dr Sudipan Dey** (orthopaedic-surgery)
+   - Qualifications: M.S.Orthopaedics
    - Clinical Experience: 10+ Years
-   - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
-   - Profile URL: https://southcityhospital.in/doctors/dr-indrajit-debnath-cardiology-silchar
-
-8. **Dr. Sudipan Dey** (Orthopaedic Surgery)
-   - Qualifications: MS (Orthopaedics)
    - Medical Registration No: 19285
-   - Clinical Experience: 10+ Years
-   - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
+   - OPD Schedule: Monday–Wednesday (09:00 – 13:00)
    - Profile URL: https://southcityhospital.in/doctors/dr-sudipan-dey-orthopaedic-surgery-silchar
 
-9. **Dr. Tridib Barali** (Orthopaedics)
-   - Qualifications: MS (Orthopaedics)
-   - Medical Registration No: 20279
+6. **Dr. Hari S Nair** (internal-medicine)
+   - Qualifications: MD (Medicine)
    - Clinical Experience: 10+ Years
-   - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
+   - Medical Registration No: 25661
+   - OPD Schedule: Monday–Wednesday (09:00 – 13:00)
+   - Profile URL: https://southcityhospital.in/doctors/dr-hari-s-nair-internal-medicine-silchar
+
+7. **Dr. Indrajit Debnath** (cardiology)
+   - Qualifications: MBBS, MD
+   - Clinical Experience: 10+ Years
+   - Medical Registration No: 22536
+   - OPD Schedule: Monday–Wednesday (09:00 – 13:00)
+   - Profile URL: https://southcityhospital.in/doctors/dr-indrajit-debnath-cardiology-silchar
+
+8. **Dr. J P Sinha** (internal-medicine)
+   - Qualifications: MBBS
+   - Clinical Experience: 10+ Years
+   - Medical Registration No: 20285
+   - OPD Schedule: Monday–Wednesday (09:00 – 13:00)
+   - Profile URL: https://southcityhospital.in/doctors/dr-j-p-sinha-internal-medicine-silchar
+
+9. **Dr. Navonil Gupta** (orthopaedic-surgery)
+   - Qualifications: MS
+   - Clinical Experience: 10+ Years
+   - Medical Registration No: nil
+   - OPD Schedule: Monday–Wednesday (09:00 – 13:00)
+   - Profile URL: https://southcityhospital.in/doctors/dr-navonil-gupta-orthopaedic-surgery-silchar
+
+10. **Dr. Pinaki Roy** (urology-laser-surgery)
+   - Qualifications: DNB in General Surgery, MCh in Urology (from IPGMER, Kolkata)
+   - Clinical Experience: 16+ Years
+   - Medical Registration No: 1234567890
+   - OPD Schedule: Monday–Wednesday (09:00 – 13:00)
+   - Profile URL: https://southcityhospital.in/doctors/dr-pinaki-roy-urology-laser-surgery-silchar
+
+11. **Dr. Sandhya R Nair** (gynecology-and-obst)
+   - Qualifications: MBBS, MD
+   - Clinical Experience: 10+ Years
+   - Medical Registration No: 84837
+   - OPD Schedule: Monday–Wednesday (09:00 – 13:00)
+   - Profile URL: https://southcityhospital.in/doctors/dr-sandhya-r-nair-gynecology-and-obst-silchar
+
+12. **Dr. Tridib Barali** (orthopaedics)
+   - Qualifications: MS (Orthopaedics)
+   - Clinical Experience: 10+ Years
+   - Medical Registration No: 20279
+   - OPD Schedule: Monday–Wednesday (09:00 – 13:00)
    - Profile URL: https://southcityhospital.in/doctors/dr-tridib-barali-orthopaedics-silchar
-
-10. **Dr. J P Sinha** (Internal Medicine)
-    - Qualifications: MBBS
-    - Medical Registration No: 20285
-    - Clinical Experience: 10+ Years
-    - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
-    - Profile URL: https://southcityhospital.in/doctors/dr-j-p-sinha-internal-medicine-silchar
-
-11. **Dr. Hari S Nair** (Internal Medicine)
-    - Qualifications: MD (Medicine)
-    - Medical Registration No: 25661
-    - Clinical Experience: 10+ Years
-    - OPD Schedule: Monday – Wednesday (09:00 – 13:00)
-    - Profile URL: https://southcityhospital.in/doctors/dr-hari-s-nair-internal-medicine-silchar
 
 ## Clinical Departments (13 Specialties)
 1. **Orthopaedics & Trauma:** https://southcityhospital.in/departments/orthopaedic-surgery

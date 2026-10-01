@@ -66,6 +66,8 @@ export async function GET(request: Request) {
             registrationNumber: d.registration_number || "",
             slug,
             expertise: d.expertise || [],
+            education: d.education || [],
+            faqs: d.faqs || [],
             seoTitle: d.seo_title || null,
             seoDescription: d.seo_description || null,
             updatedAt: d.updated_at || d.created_at || new Date().toISOString(),

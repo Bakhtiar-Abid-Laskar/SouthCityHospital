@@ -1,28 +1,332 @@
 [
   {
-    "id": "doc-1787662437011",
-    "name": "Dr. Pinaki Roy",
-    "departmentSlug": "urology-laser-surgery",
+    "id": "doc-1787824620868",
+    "name": "Dr.  Annesha Roy",
+    "departmentSlug": "orthopaedic-surgery",
     "qualifications": [
-      "MBBS",
-      "DNB in General Surgery",
-      "MCh in Urology (from IPGMER, Kolkata)"
+      "MS"
     ],
     "experienceYears": 10,
-    "photoUrl": "https://kgvpriwhqhbvofowbblv.supabase.co/storage/v1/object/public/doctor-avatars/avatars/doctor-1787662412717-qua3dig.webp",
+    "photoUrl": "https://kgvpriwhqhbvofowbblv.supabase.co/storage/v1/object/public/doctor-avatars/avatars/doctor-1787824617757-kl87hcj.webp",
     "active": true,
     "consultationSchedule": [
       {
         "day": "Monday–Wednesday",
-        "startTime": "09:00",
-        "endTime": "13:00"
+        "endTime": "13:00",
+        "startTime": "09:00"
       }
     ],
+    "biography": null,
     "languages": [
       "English",
       "Bengali",
       "Hindi"
     ],
-    "slug": "dr-pinaki-roy-urology-laser-surgery-silchar"
+    "registrationNumber": "23814",
+    "slug": "dr-annesha-roy-orthopaedic-surgery-silchar",
+    "expertise": []
+  },
+  {
+    "id": "doc-1787824525220",
+    "name": "Dr. Alaka Banerjee",
+    "departmentSlug": "gynecology-and-obst",
+    "qualifications": [
+      "MS"
+    ],
+    "experienceYears": 10,
+    "photoUrl": "https://kgvpriwhqhbvofowbblv.supabase.co/storage/v1/object/public/doctor-avatars/avatars/doctor-1787824522017-kgdpfdo.webp",
+    "active": true,
+    "consultationSchedule": [
+      {
+        "day": "Monday–Wednesday",
+        "endTime": "13:00",
+        "startTime": "09:00"
+      }
+    ],
+    "biography": null,
+    "languages": [
+      "English",
+      "Bengali",
+      "Hindi"
+    ],
+    "registrationNumber": "14827",
+    "slug": "dr-alaka-banerjee-gynecology-and-obst-silchar",
+    "expertise": []
+  },
+  {
+    "id": "doc-1790805659393",
+    "name": "Dr. Anshuman Dutta",
+    "departmentSlug": "orthopaedic-surgery",
+    "qualifications": [
+      "MS",
+      "ORTHO"
+    ],
+    "experienceYears": 10,
+    "photoUrl": "https://kgvpriwhqhbvofowbblv.supabase.co/storage/v1/object/public/doctor-avatars/avatars/doctor-1790805655718-lsribnz.webp",
+    "active": true,
+    "consultationSchedule": [
+      {
+        "day": "Monday–Wednesday",
+        "endTime": "13:00",
+        "startTime": "09:00"
+      }
+    ],
+    "biography": null,
+    "languages": [
+      "English",
+      "Bengali",
+      "Hindi"
+    ],
+    "registrationNumber": "14745",
+    "slug": "dr-anshuman-dutta-orthopaedic-surgery-silchar",
+    "expertise": []
+  },
+  {
+    "id": "doc-1790578425272",
+    "name": "Dr. Biplob Nath",
+    "departmentSlug": "internal-medicine",
+    "qualifications": [
+      "MBBS",
+      "MD (Medicine)"
+    ],
+    "experienceYears": 15,
+    "photoUrl": "https://kgvpriwhqhbvofowbblv.supabase.co/storage/v1/object/public/doctor-avatars/avatars/doctor-1790578256507-y6patud.webp",
+    "active": true,
+    "consultationSchedule": [
+      {
+        "day": "Monday–Wednesday",
+        "endTime": "13:00",
+        "startTime": "09:00"
+      }
+    ],
+    "biography": null,
+    "languages": [
+      "English",
+      "Bengali",
+      "Hindi"
+    ],
+    "registrationNumber": "16225",
+    "slug": "dr-biplob-nath-internal-medicine-silchar",
+    "expertise": []
+  },
+  {
+    "id": "doc-1790578157287",
+    "name": "Dr. Dr Sudipan Dey",
+    "departmentSlug": "orthopaedic-surgery",
+    "qualifications": [
+      "M.S.Orthopaedics"
+    ],
+    "experienceYears": 10,
+    "photoUrl": "https://kgvpriwhqhbvofowbblv.supabase.co/storage/v1/object/public/doctor-avatars/avatars/doctor-1790578029593-gqv7idc.webp",
+    "active": true,
+    "consultationSchedule": [
+      {
+        "day": "Monday–Wednesday",
+        "endTime": "13:00",
+        "startTime": "09:00"
+      }
+    ],
+    "biography": null,
+    "languages": [
+      "English",
+      "Bengali",
+      "Hindi"
+    ],
+    "registrationNumber": "19285",
+    "slug": "dr-sudipan-dey-orthopaedic-surgery-silchar",
+    "expertise": []
+  },
+  {
+    "id": "doc-1790579814115",
+    "name": "Dr. Hari S Nair",
+    "departmentSlug": "internal-medicine",
+    "qualifications": [
+      "MD (Medicine)"
+    ],
+    "experienceYears": 10,
+    "photoUrl": "https://kgvpriwhqhbvofowbblv.supabase.co/storage/v1/object/public/doctor-avatars/avatars/doctor-1790579742929-sb896fl.webp",
+    "active": true,
+    "consultationSchedule": [
+      {
+        "day": "Monday–Wednesday",
+        "endTime": "13:00",
+        "startTime": "09:00"
+      }
+    ],
+    "biography": null,
+    "languages": [
+      "English",
+      "Bengali",
+      "Hindi"
+    ],
+    "registrationNumber": "25661",
+    "slug": "dr-hari-s-nair-internal-medicine-silchar",
+    "expertise": []
+  },
+  {
+    "id": "doc-1790579050076",
+    "name": "Dr. Indrajit Debnath",
+    "departmentSlug": "cardiology",
+    "qualifications": [
+      "MBBS",
+      "MD"
+    ],
+    "experienceYears": 10,
+    "photoUrl": "https://kgvpriwhqhbvofowbblv.supabase.co/storage/v1/object/public/doctor-avatars/avatars/doctor-1790579040130-m8nbkc6.webp",
+    "active": true,
+    "consultationSchedule": [
+      {
+        "day": "Monday–Wednesday",
+        "endTime": "13:00",
+        "startTime": "09:00"
+      }
+    ],
+    "biography": null,
+    "languages": [
+      "English",
+      "Bengali",
+      "Hindi"
+    ],
+    "registrationNumber": "22536",
+    "slug": "dr-indrajit-debnath-cardiology-silchar",
+    "expertise": []
+  },
+  {
+    "id": "doc-1790579592327",
+    "name": "Dr. J P Sinha",
+    "departmentSlug": "internal-medicine",
+    "qualifications": [
+      "MBBS"
+    ],
+    "experienceYears": 10,
+    "photoUrl": "https://kgvpriwhqhbvofowbblv.supabase.co/storage/v1/object/public/doctor-avatars/avatars/doctor-1790579570785-jp1a4mq.webp",
+    "active": true,
+    "consultationSchedule": [
+      {
+        "day": "Monday–Wednesday",
+        "endTime": "13:00",
+        "startTime": "09:00"
+      }
+    ],
+    "biography": null,
+    "languages": [
+      "English",
+      "Bengali",
+      "Hindi"
+    ],
+    "registrationNumber": "20285",
+    "slug": "dr-j-p-sinha-internal-medicine-silchar",
+    "expertise": []
+  },
+  {
+    "id": "doc-1787824257045",
+    "name": "Dr. Navonil Gupta",
+    "departmentSlug": "orthopaedic-surgery",
+    "qualifications": [
+      "MS"
+    ],
+    "experienceYears": 10,
+    "photoUrl": "https://kgvpriwhqhbvofowbblv.supabase.co/storage/v1/object/public/doctor-avatars/avatars/doctor-1787824247865-1v6uzs6.webp",
+    "active": true,
+    "consultationSchedule": [
+      {
+        "day": "Monday–Wednesday",
+        "endTime": "13:00",
+        "startTime": "09:00"
+      }
+    ],
+    "biography": null,
+    "languages": [
+      "English",
+      "Bengali",
+      "Hindi"
+    ],
+    "registrationNumber": "nil",
+    "slug": "dr-navonil-gupta-orthopaedic-surgery-silchar",
+    "expertise": []
+  },
+  {
+    "id": "doc-1787662437011",
+    "name": "Dr. Pinaki Roy",
+    "departmentSlug": "urology-laser-surgery",
+    "qualifications": [
+      "DNB in General Surgery",
+      "MCh in Urology (from IPGMER",
+      "Kolkata)"
+    ],
+    "experienceYears": 16,
+    "photoUrl": "https://kgvpriwhqhbvofowbblv.supabase.co/storage/v1/object/public/doctor-avatars/avatars/doctor-1787662412717-qua3dig.webp",
+    "active": true,
+    "consultationSchedule": [
+      {
+        "day": "Monday–Wednesday",
+        "endTime": "13:00",
+        "startTime": "09:00"
+      }
+    ],
+    "biography": null,
+    "languages": [
+      "English",
+      "Bengali",
+      "Hindi"
+    ],
+    "registrationNumber": "1234567890",
+    "slug": "dr-pinaki-roy-urology-laser-surgery-silchar",
+    "expertise": []
+  },
+  {
+    "id": "doc-1790578900034",
+    "name": "Dr. Sandhya R Nair",
+    "departmentSlug": "gynecology-and-obst",
+    "qualifications": [
+      "MBBS",
+      "MD"
+    ],
+    "experienceYears": 10,
+    "photoUrl": null,
+    "active": true,
+    "consultationSchedule": [
+      {
+        "day": "Monday–Wednesday",
+        "endTime": "13:00",
+        "startTime": "09:00"
+      }
+    ],
+    "biography": null,
+    "languages": [
+      "English",
+      "Bengali",
+      "Hindi"
+    ],
+    "registrationNumber": "84837",
+    "slug": "dr-sandhya-r-nair-gynecology-and-obst-silchar",
+    "expertise": []
+  },
+  {
+    "id": "doc-1790579244763",
+    "name": "Dr. Tridib Barali",
+    "departmentSlug": "orthopaedics",
+    "qualifications": [
+      "MS (Orthopaedics)"
+    ],
+    "experienceYears": 10,
+    "photoUrl": null,
+    "active": true,
+    "consultationSchedule": [
+      {
+        "day": "Monday–Wednesday",
+        "endTime": "13:00",
+        "startTime": "09:00"
+      }
+    ],
+    "biography": null,
+    "languages": [
+      "English",
+      "Bengali",
+      "Hindi"
+    ],
+    "registrationNumber": "20279",
+    "slug": "dr-tridib-barali-orthopaedics-silchar",
+    "expertise": []
   }
 ]

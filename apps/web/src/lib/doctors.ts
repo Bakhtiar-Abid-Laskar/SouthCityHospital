@@ -56,6 +56,8 @@ function normalizeDoctor(d: any, existingSlugs: string[] = []): Doctor {
     registrationNumber: d.registration_number || d.registrationNumber || "",
     slug,
     expertise: Array.isArray(d.expertise) ? d.expertise : [],
+    education: Array.isArray(d.education) ? d.education : [],
+    faqs: Array.isArray(d.faqs) ? d.faqs : [],
     seoTitle: d.seo_title || d.seoTitle || null,
     seoDescription: d.seo_description || d.seoDescription || null,
     createdAt: d.created_at || d.createdAt,

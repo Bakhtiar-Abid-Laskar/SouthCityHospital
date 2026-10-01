@@ -38,10 +38,14 @@ export async function getDoctors(params: DoctorFilterParams = {}): Promise<Docto
 
 // ─── React Query Hook ─────────────────────────────────────────────────────────
 
-export function useDoctors(params: DoctorFilterParams = {}) {
+export function useDoctors(
+  params: DoctorFilterParams = {},
+  options?: { initialData?: Doctor[] }
+) {
   return useQuery({
     queryKey: ["doctors", params],
     queryFn: () => fetchDoctors(params),
+    initialData: options?.initialData,
     staleTime: 1000 * 5, // 5 seconds
     refetchOnWindowFocus: true,
   });

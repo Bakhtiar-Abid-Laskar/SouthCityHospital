@@ -194,11 +194,14 @@ function DoctorCard({ doctor, onBook }: { doctor: Doctor; onBook: (doctor: Docto
   );
 }
 
-export function DoctorsClient() {
+export function DoctorsClient({ initialDoctors }: { initialDoctors?: Doctor[] } = {}) {
   const [selectedDept, setSelectedDept] = useState<string>("all");
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [confirmedAppointment, setConfirmedAppointment] = useState<Appointment | null>(null);
-  const { data: doctors, isLoading, isError } = useDoctors({ activeOnly: true });
+  const { data: doctors, isLoading, isError } = useDoctors(
+    { activeOnly: true },
+    { initialData: initialDoctors }
+  );
 
   // Map doctors by department in display order (Part C.1)
   const populatedDepartments = departments

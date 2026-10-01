@@ -12,6 +12,16 @@ import {
   Loader2,
   Image as ImageIcon,
   X,
+  ExternalLink,
+  Sparkles,
+  Bold,
+  Italic,
+  List,
+  Eye,
+  Edit3,
+  ChevronDown,
+  ChevronUp,
+  Globe,
 } from "lucide-react";
 import { AdminLayout } from "@/components/AdminLayout";
 import { useDoctors, saveDoctor, deleteDoctor, clearAllDoctors } from "@/services/doctors";
@@ -47,8 +57,15 @@ export default function AdminDoctorsPage() {
   const [registrationNumber, setRegistrationNumber] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
   const [isActive, setIsActive] = useState(true);
+  const [biography, setBiography] = useState("");
+  const [expertise, setExpertise] = useState("");
+  const [seoTitle, setSeoTitle] = useState("");
+  const [seoDescription, setSeoDescription] = useState("");
+  const [bioTab, setBioTab] = useState<"write" | "preview">("write");
+  const [isSeoOpen, setIsSeoOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const bioTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     fetch("/api/auth/me")
@@ -70,6 +87,26 @@ export default function AdminDoctorsPage() {
     }
   }, [initialDoctors]);
 
+  const insertFormatting = (prefix: string, suffix: string = "") => {
+    if (!bioTextareaRef.current) return;
+    const start = bioTextareaRef.current.selectionStart;
+    const end = bioTextareaRef.current.selectionEnd;
+    const text = biography;
+    const selected = text.substring(start, end);
+    const replacement = prefix + (selected || "text") + suffix;
+    const nextBio = text.substring(0, start) + replacement + text.substring(end);
+    setBiography(nextBio);
+    setTimeout(() => {
+      if (bioTextareaRef.current) {
+        bioTextareaRef.current.focus();
+        bioTextareaRef.current.setSelectionRange(
+          start + prefix.length,
+          start + prefix.length + (selected.length || 4)
+        );
+      }
+    }, 0);
+  };
+
   const handleOpenCreate = () => {
     setName("");
     setDeptSlug("cardiology");
@@ -79,6 +116,12 @@ export default function AdminDoctorsPage() {
     setRegistrationNumber("");
     setPhotoUrl("");
     setIsActive(true);
+    setBiography("");
+    setExpertise("");
+    setSeoTitle("");
+    setSeoDescription("");
+    setBioTab("write");
+    setIsSeoOpen(false);
     setIsCreating(true);
   };
 
@@ -96,6 +139,12 @@ export default function AdminDoctorsPage() {
     setRegistrationNumber(doc.registrationNumber || "");
     setPhotoUrl(doc.photoUrl || "");
     setIsActive(doc.active);
+    setBiography(doc.biography || doc.bio || "");
+    setExpertise(Array.isArray(doc.expertise) ? doc.expertise.join(", ") : "");
+    setSeoTitle(doc.seoTitle || "");
+    setSeoDescription(doc.seoDescription || "");
+    setBioTab("write");
+    setIsSeoOpen(Boolean(doc.seoTitle || doc.seoDescription));
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -126,6 +175,10 @@ export default function AdminDoctorsPage() {
       .split(",")
       .map((l) => l.trim())
       .filter(Boolean);
+    const expertiseList = expertise
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
 
     if (isCreating) {
       const newDoc: Doctor = {
@@ -141,11 +194,19 @@ export default function AdminDoctorsPage() {
         ],
         languages: spokenLangs.length > 0 ? spokenLangs : ["English", "Bengali", "Hindi"],
         registrationNumber: registrationNumber.trim(),
+        biography: biography.trim() || null,
+        bio: biography.trim() || null,
+        expertise: expertiseList,
+        seoTitle: seoTitle.trim() || null,
+        seoDescription: seoDescription.trim() || null,
       };
       await saveDoctor(newDoc);
-      setDoctorsList((prev) => [newDoc, ...prev]);
+      refresh();
       setIsCreating(false);
-      setFeedback({ type: "success", message: `${newDoc.name} registered successfully.` });
+      setFeedback({
+        type: "success",
+        message: `${newDoc.name} registered. Profile page and SEO cache automatically published!`,
+      });
     } else if (editingDoctor) {
       const updatedDoc: Doctor = {
         ...editingDoctor,
@@ -157,15 +218,21 @@ export default function AdminDoctorsPage() {
         active: isActive,
         languages: spokenLangs.length > 0 ? spokenLangs : ["English", "Bengali", "Hindi"],
         registrationNumber: registrationNumber.trim(),
+        biography: biography.trim() || null,
+        bio: biography.trim() || null,
+        expertise: expertiseList,
+        seoTitle: seoTitle.trim() || null,
+        seoDescription: seoDescription.trim() || null,
       };
       await saveDoctor(updatedDoc);
-      setDoctorsList((prev) =>
-        prev.map((d) => (d.id === editingDoctor.id ? updatedDoc : d))
-      );
+      refresh();
       setEditingDoctor(null);
-      setFeedback({ type: "success", message: `Profile updated for ${updatedDoc.name}.` });
+      setFeedback({
+        type: "success",
+        message: `Profile updated and web cache revalidated for ${updatedDoc.name}.`,
+      });
     }
-    setTimeout(() => setFeedback(null), 3500);
+    setTimeout(() => setFeedback(null), 4000);
   };
 
   const handleToggleActive = async (doc: Doctor) => {
@@ -366,6 +433,25 @@ export default function AdminDoctorsPage() {
                           </span>
                         ))}
                       </div>
+
+                      {/* SEO Profile URL status */}
+                      <div className="pt-2 border-t border-[var(--mist)] flex items-center justify-between gap-1 text-[11px]">
+                        <span className="text-[var(--slate)] truncate font-mono text-[10px]">
+                          /doctors/{doc.slug || "auto-generated"}
+                        </span>
+                        {doc.slug && (
+                          <a
+                            href={`http://localhost:3000/doctors/${doc.slug}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[var(--primary)] hover:underline inline-flex items-center gap-1 font-semibold shrink-0"
+                            title="Open live public profile"
+                          >
+                            <span>Live Profile</span>
+                            <ExternalLink size={11} />
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -561,6 +647,189 @@ export default function AdminDoctorsPage() {
                       </p>
                     </div>
                   </div>
+                </div>
+
+                {/* Biography (Rich Markdown Formatting) */}
+                <div className="space-y-1.5 pt-1">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-semibold text-[var(--navy-950)]">
+                      Doctor Biography (Professional Overview)
+                    </label>
+                    <div className="flex items-center rounded-lg bg-slate-100 p-0.5 text-[11px] font-medium">
+                      <button
+                        type="button"
+                        onClick={() => setBioTab("write")}
+                        className={`px-2 py-0.5 rounded-md transition-colors cursor-pointer flex items-center gap-1 ${
+                          bioTab === "write"
+                            ? "bg-white text-[var(--navy-950)] shadow-xs"
+                            : "text-[var(--slate)] hover:text-[var(--navy-950)]"
+                        }`}
+                      >
+                        <Edit3 size={11} />
+                        <span>Write</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setBioTab("preview")}
+                        className={`px-2 py-0.5 rounded-md transition-colors cursor-pointer flex items-center gap-1 ${
+                          bioTab === "preview"
+                            ? "bg-white text-[var(--navy-950)] shadow-xs"
+                            : "text-[var(--slate)] hover:text-[var(--navy-950)]"
+                        }`}
+                      >
+                        <Eye size={11} />
+                        <span>Preview</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {bioTab === "write" ? (
+                    <div className="space-y-1">
+                      {/* Markdown Toolbar */}
+                      <div className="flex items-center gap-1 p-1 bg-slate-50 border border-[var(--mist)] rounded-lg text-slate-700">
+                        <button
+                          type="button"
+                          onClick={() => insertFormatting("**", "**")}
+                          className="p-1 hover:bg-white rounded hover:shadow-xs transition-all text-xs font-bold"
+                          title="Bold (**text**)"
+                        >
+                          <Bold size={13} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => insertFormatting("*", "*")}
+                          className="p-1 hover:bg-white rounded hover:shadow-xs transition-all text-xs italic"
+                          title="Italic (*text*)"
+                        >
+                          <Italic size={13} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => insertFormatting("\n- ")}
+                          className="p-1 hover:bg-white rounded hover:shadow-xs transition-all text-xs"
+                          title="Bullet List (- item)"
+                        >
+                          <List size={13} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => insertFormatting("\n\n### ")}
+                          className="px-1.5 py-0.5 hover:bg-white rounded hover:shadow-xs transition-all text-[11px] font-bold"
+                          title="Subheading (### Heading)"
+                        >
+                          H3
+                        </button>
+                        <span className="text-[10px] text-slate-400 ml-auto pr-1">
+                          Markdown supported
+                        </span>
+                      </div>
+
+                      <textarea
+                        ref={bioTextareaRef}
+                        rows={4}
+                        value={biography}
+                        onChange={(e) => setBiography(e.target.value)}
+                        placeholder="Dr. [Name] is a senior specialist at South City Hospital with comprehensive clinical expertise in advanced diagnostic evaluations, surgical procedures, and compassionate patient care..."
+                        className="w-full px-3 py-2 rounded-xl text-xs border border-[var(--mist)] focus:border-[var(--primary)] outline-none leading-relaxed"
+                      />
+                    </div>
+                  ) : (
+                    <div className="min-h-[100px] p-3 rounded-xl border border-[var(--mist)] bg-slate-50 text-xs text-slate-700 space-y-2 whitespace-pre-wrap leading-relaxed">
+                      {biography.trim() ? (
+                        biography
+                      ) : (
+                        <p className="text-slate-400 italic">
+                          No custom biography entered. An authoritative automated regional biography will be generated for this doctor.
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Expertise & Conditions Treated */}
+                <div>
+                  <label className="block text-xs font-semibold text-[var(--navy-950)] mb-1">
+                    Areas of Expertise &amp; Conditions Treated (comma-separated)
+                  </label>
+                  <input
+                    type="text"
+                    value={expertise}
+                    onChange={(e) => setExpertise(e.target.value)}
+                    placeholder="e.g. Kidney Stone Removal, Laser Surgery, Laparoscopic Procedures, Prostate Care"
+                    className="w-full px-3 py-2 rounded-xl text-xs border border-[var(--mist)] focus:border-[var(--primary)] outline-none"
+                  />
+                  <p className="text-[10px] text-[var(--slate)] mt-1">
+                    Displayed on the doctor’s live profile as dedicated clinical focus tags.
+                  </p>
+                </div>
+
+                {/* SEO & Search Snippet Accordion */}
+                <div className="border border-[var(--mist)] rounded-2xl p-3 bg-slate-50/70 space-y-3">
+                  <button
+                    type="button"
+                    onClick={() => setIsSeoOpen(!isSeoOpen)}
+                    className="w-full flex items-center justify-between text-xs font-semibold text-[var(--navy-950)] cursor-pointer"
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <Globe size={13} className="text-[var(--primary)]" />
+                      <span>Google Search SEO &amp; Snippet Overrides</span>
+                    </div>
+                    {isSeoOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                  </button>
+
+                  {isSeoOpen && (
+                    <div className="space-y-3 pt-2 border-t border-[var(--mist)] animate-in fade-in duration-100">
+                      <div>
+                        <div className="flex justify-between items-center mb-1">
+                          <label className="text-[11px] font-medium text-[var(--navy-950)]">
+                            SEO Title Tag Override
+                          </label>
+                          <span className="text-[10px] text-slate-500 font-mono">
+                            {seoTitle.length} / 60
+                          </span>
+                        </div>
+                        <input
+                          type="text"
+                          value={seoTitle}
+                          onChange={(e) => setSeoTitle(e.target.value)}
+                          placeholder={`${name || "Dr. Rajesh Sen"} – Specialist in Silchar | South City Hospital`}
+                          className="w-full px-3 py-1.5 rounded-lg text-xs border border-[var(--mist)] focus:border-[var(--primary)] outline-none bg-white"
+                        />
+                      </div>
+
+                      <div>
+                        <div className="flex justify-between items-center mb-1">
+                          <label className="text-[11px] font-medium text-[var(--navy-950)]">
+                            SEO Meta Description Override
+                          </label>
+                          <span className="text-[10px] text-slate-500 font-mono">
+                            {seoDescription.length} / 160
+                          </span>
+                        </div>
+                        <textarea
+                          rows={2}
+                          value={seoDescription}
+                          onChange={(e) => setSeoDescription(e.target.value)}
+                          placeholder="Consult leading medical specialist with extensive clinical experience at South City Hospital, Silchar. Book OPD appointments online."
+                          className="w-full px-3 py-1.5 rounded-lg text-xs border border-[var(--mist)] focus:border-[var(--primary)] outline-none bg-white"
+                        />
+                      </div>
+
+                      {/* Google Search Snippet Preview */}
+                      <div className="p-3 rounded-xl bg-white border border-slate-200 text-xs space-y-1 shadow-xs">
+                        <div className="text-[10px] text-slate-500 font-mono flex items-center gap-1 truncate">
+                          <Globe size={10} />
+                          <span>https://southcityhospital.in › doctors › {editingDoctor?.slug || "dr-auto-generated-slug"}</span>
+                        </div>
+                        <p className="text-blue-700 font-medium text-xs leading-snug line-clamp-1">
+                          {seoTitle || `${name || "Dr. Doctor Name"} – Specialist in Silchar | South City Hospital`}
+                        </p>
+                        <p className="text-slate-600 text-[11px] leading-tight line-clamp-2">
+                          {seoDescription || `Consult ${name || "specialist doctor"} with ${experience || 10}+ years clinical experience at South City Hospital in Silchar. View qualifications, consultation schedules, and book appointments online.`}
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-2 pt-1">

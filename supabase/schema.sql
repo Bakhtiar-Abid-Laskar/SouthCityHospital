@@ -87,6 +87,8 @@ CREATE TABLE IF NOT EXISTS doctors (
   registration_number TEXT NOT NULL,
   slug TEXT UNIQUE,
   expertise TEXT[] NOT NULL DEFAULT '{}',
+  education JSONB NOT NULL DEFAULT '[]'::jsonb,
+  faqs JSONB NOT NULL DEFAULT '[]'::jsonb,
   seo_title TEXT NULL,
   seo_description TEXT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -99,6 +101,8 @@ ALTER TABLE doctors ADD COLUMN IF NOT EXISTS registration_number TEXT NOT NULL D
 ALTER TABLE doctors ADD COLUMN IF NOT EXISTS slug TEXT UNIQUE;
 CREATE INDEX IF NOT EXISTS idx_doctors_slug ON doctors(slug);
 ALTER TABLE doctors ADD COLUMN IF NOT EXISTS expertise TEXT[] NOT NULL DEFAULT '{}';
+ALTER TABLE doctors ADD COLUMN IF NOT EXISTS education JSONB NOT NULL DEFAULT '[]'::jsonb;
+ALTER TABLE doctors ADD COLUMN IF NOT EXISTS faqs JSONB NOT NULL DEFAULT '[]'::jsonb;
 ALTER TABLE doctors ADD COLUMN IF NOT EXISTS seo_title TEXT NULL;
 ALTER TABLE doctors ADD COLUMN IF NOT EXISTS seo_description TEXT NULL;
 

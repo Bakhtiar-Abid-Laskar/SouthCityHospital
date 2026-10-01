@@ -29,8 +29,73 @@ import { departments } from "@/data/departments";
 import { departmentDetails } from "@/data/department-details";
 import { hospital, SITE_URL } from "@/data/hospital";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { buildPhysicianSchema, buildBreadcrumbSchema } from "@/lib/doctor-schema";
+import {
+  buildPhysicianSchema,
+  buildBreadcrumbSchema,
+  buildDoctorFaqSchema,
+  getAuthoritativeDoctorFaqs,
+} from "@/lib/doctor-schema";
 import { DoctorProfileBookingAction } from "@/components/doctor/DoctorProfileBookingAction";
+
+function renderInlineMarkdown(text: string) {
+  const parts = text.split(/(\*\*.*?\*\*|\*.*?\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return (
+        <strong key={i} className="font-semibold text-[var(--navy-950)]">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    if (part.startsWith("*") && part.endsWith("*")) {
+      return (
+        <em key={i} className="italic text-[var(--navy-950)]">
+          {part.slice(1, -1)}
+        </em>
+      );
+    }
+    return part;
+  });
+}
+
+function renderFormattedBio(bio: string) {
+  const paragraphs = bio.split(/\n\s*\n/).filter(Boolean);
+
+  return paragraphs.map((p, pIdx) => {
+    const lines = p.split("\n").map((l) => l.trim()).filter(Boolean);
+    const isList = lines.every((l) => l.startsWith("- ") || l.startsWith("• ") || l.startsWith("* "));
+
+    if (isList) {
+      return (
+        <ul key={pIdx} className="space-y-2 my-3 pl-1">
+          {lines.map((line, lIdx) => {
+            const clean = line.replace(/^[-•*]\s+/, "");
+            return (
+              <li key={lIdx} className="flex items-start gap-2.5 text-sm text-[var(--slate)]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary)] shrink-0 mt-2" aria-hidden="true" />
+                <span>{renderInlineMarkdown(clean)}</span>
+              </li>
+            );
+          })}
+        </ul>
+      );
+    }
+
+    if (p.startsWith("### ")) {
+      return (
+        <h3 key={pIdx} className="font-display font-semibold text-lg text-[var(--navy-950)] mt-5 mb-2">
+          {p.replace(/^###\s+/, "")}
+        </h3>
+      );
+    }
+
+    return (
+      <p key={pIdx} className="text-[var(--slate)] leading-relaxed text-sm sm:text-base">
+        {renderInlineMarkdown(p)}
+      </p>
+    );
+  });
+}
 
 export const revalidate = 3600; // 1 hour ISR
 export const dynamicParams = true; // Allow newly published doctors without redeploy
@@ -60,25 +125,49 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const dept = departments.find((d) => d.slug === doctor.departmentSlug);
   const specialty = dept ? dept.name : "Specialist";
   const cleanName = doctor.name.replace(/\s+/g, " ").trim();
+  const rawName = cleanName.replace(/^Dr\.\s*/i, "");
   const displayName = cleanName.startsWith("Dr.") ? cleanName : `Dr. ${cleanName}`;
 
-  // Title: under ~60 characters where possible
+  // Title: under ~60 characters where possible, front-loaded doctor name for maximum Google ranking
   const title = doctor.seoTitle || `${displayName} – ${specialty} in Silchar | South City Hospital`;
 
   // Description: 140-160 characters
   const expSnippet = doctor.experienceYears > 0 ? `${doctor.experienceYears}+ years experience` : "clinical expertise";
   const daysSnippet =
     doctor.consultationSchedule && doctor.consultationSchedule.length > 0
-      ? `Consultation days: ${doctor.consultationSchedule[0].day}. `
+      ? `Consultation: ${doctor.consultationSchedule[0].day}. `
       : "";
-  const defaultDesc = `Consult ${displayName}, experienced ${specialty} specialist with ${expSnippet} at South City Hospital, Silchar. ${daysSnippet}Book appointment online.`;
+  const defaultDesc = `Consult ${displayName}, experienced ${specialty} specialist with ${expSnippet} at South City Hospital, Meherpur, Silchar. ${daysSnippet}Book chamber appointment online.`;
   const description = (doctor.seoDescription || defaultDesc).slice(0, 160);
 
   const canonicalUrl = `${SITE_URL}/doctors/${doctor.slug}`;
 
+  // Split name for OpenGraph profile tags
+  const nameParts = rawName.split(" ");
+  const firstName = nameParts[0] || "";
+  const lastName = nameParts.slice(1).join(" ") || "";
+
   return {
     title,
     description,
+    keywords: [
+      displayName,
+      rawName,
+      `${displayName} Silchar`,
+      `${rawName} Silchar`,
+      `${displayName} South City Hospital`,
+      `${displayName} chamber timings Silchar`,
+      `${displayName} appointment Silchar`,
+      `${rawName} doctor Silchar`,
+      `${rawName} chamber Silchar`,
+      `${specialty} doctor Silchar`,
+      `Best ${specialty.toLowerCase()} in Silchar`,
+      "South City Hospital Silchar doctors",
+      "Doctor chamber Meherpur Silchar",
+      "Silchar hospital OPD schedule",
+      "Barak Valley medical specialist",
+      "Assam doctor appointment",
+    ],
     alternates: {
       canonical: canonicalUrl,
     },
@@ -87,14 +176,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       url: canonicalUrl,
       type: "profile",
-      siteName: hospital.name,
+      siteName: `${hospital.name}, Silchar`,
       locale: "en_IN",
+      firstName,
+      lastName,
+      username: doctor.slug,
       images: [
         {
           url: doctor.photoUrl || `${SITE_URL}/og-image.jpg`,
           width: 800,
           height: 800,
-          alt: `${displayName}, ${specialty} at South City Hospital, Silchar`,
+          alt: `${displayName}, ${specialty} at South City Hospital, Silchar, Assam`,
         },
       ],
     },
@@ -104,9 +196,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       images: [doctor.photoUrl || `${SITE_URL}/og-image.jpg`],
     },
+    other: {
+      "geo.region": "IN-AS",
+      "geo.placename": "Silchar, Cachar, Assam",
+      "geo.position": `${hospital.location.geo.latitude};${hospital.location.geo.longitude}`,
+      "ICBM": `${hospital.location.geo.latitude}, ${hospital.location.geo.longitude}`,
+      "DC.title": title,
+      "DC.creator": `${hospital.name}, Silchar`,
+      "DC.coverage": "Silchar, Cachar, Barak Valley, Assam, India",
+      "target-location": "Silchar, Assam, India",
+    },
     robots: {
       index: true,
       follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
     },
   };
 }
@@ -147,6 +252,10 @@ export default async function DoctorProfilePage({ params }: PageProps) {
     { name: displayName, url: canonicalUrl },
   ]);
 
+  // Authoritative AI-grounded FAQs (Guarantees 5 high-converting Q&As for Google & AI Engines)
+  const authoritativeFaqs = getAuthoritativeDoctorFaqs(doctor, specialtyName);
+  const faqSchema = buildDoctorFaqSchema(authoritativeFaqs);
+
   const hasValidReg = isValidRegistrationNumber(doctor.registrationNumber);
 
   return (
@@ -154,6 +263,7 @@ export default async function DoctorProfilePage({ params }: PageProps) {
       {/* ── Structured Data (JSON-LD) ── */}
       <JsonLd data={physicianSchema} />
       <JsonLd data={breadcrumbSchema} />
+      {faqSchema && <JsonLd data={faqSchema} />}
 
       {/* ── Breadcrumb Navigation ── */}
       <nav aria-label="Breadcrumbs" className="bg-[var(--cloud)] border-b border-[var(--mist)] py-3">
@@ -336,8 +446,8 @@ export default async function DoctorProfilePage({ params }: PageProps) {
                   </h2>
                 </div>
                 <div className="prose prose-slate max-w-none text-[var(--slate)] leading-relaxed space-y-4">
-                  <p>{bioText}</p>
-                  <p className="text-sm">
+                  {renderFormattedBio(bioText)}
+                  <p className="text-sm pt-2 border-t border-[var(--mist)]/40">
                     Consultations are conducted at South City Hospital in Meherpur, Silchar, supported by fully equipped on-site diagnostic testing, digital imaging, and 24-hour critical emergency care.
                   </p>
                 </div>
@@ -368,6 +478,63 @@ export default async function DoctorProfilePage({ params }: PageProps) {
                   </div>
                 </section>
               )}
+
+              {/* Education & Qualifications */}
+              {doctor.education && doctor.education.length > 0 && (
+                <section aria-labelledby="education-heading">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="w-1.5 h-6 rounded-full bg-[var(--primary)]" aria-hidden="true" />
+                    <h2 id="education-heading" className="font-display text-2xl font-bold text-[var(--navy-950)]">
+                      Education &amp; Academic Background
+                    </h2>
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-3.5">
+                    {doctor.education.map((edu, idx) => (
+                      <div
+                        key={idx}
+                        className="p-4 rounded-xl bg-[var(--cloud)] border border-[var(--mist)] text-sm space-y-1"
+                      >
+                        <p className="font-bold text-[var(--navy-950)]">{edu.degree}</p>
+                        <p className="text-xs text-[var(--slate)]">{edu.institution}</p>
+                        {edu.year && (
+                          <p className="text-[11px] font-mono text-[var(--primary)] font-semibold">
+                            {edu.year}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {/* Frequently Asked Questions (Indexed by Google & AI Search) */}
+              <section aria-labelledby="faq-heading">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="w-1.5 h-6 rounded-full bg-[var(--accent)]" aria-hidden="true" />
+                  <h2 id="faq-heading" className="font-display text-2xl font-bold text-[var(--navy-950)]">
+                    Frequently Asked Questions about {displayName}
+                  </h2>
+                </div>
+                <p className="text-xs text-[var(--slate)] mb-5">
+                  Authoritative answers regarding chamber availability, OPD consultation schedules, and hospital location in Silchar, Assam.
+                </p>
+                <div className="space-y-3.5">
+                  {authoritativeFaqs.map((faq, idx) => (
+                    <div
+                      key={idx}
+                      className="p-4 sm:p-5 rounded-2xl bg-white border border-[var(--mist)] space-y-2 shadow-xs hover:border-[var(--primary)]/30 transition-all"
+                    >
+                      <h3 className="font-semibold text-sm sm:text-base text-[var(--navy-950)] flex items-start gap-2.5">
+                        <span className="text-[var(--primary)] font-bold shrink-0">Q:</span>
+                        <span>{faq.question}</span>
+                      </h3>
+                      <p className="text-xs sm:text-sm text-[var(--slate)] leading-relaxed pl-5 sm:pl-6">
+                        {faq.answer}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </section>
 
               {/* Consultation Hours & Schedule Table */}
               <section aria-labelledby="schedule-heading">
@@ -446,20 +613,34 @@ export default async function DoctorProfilePage({ params }: PageProps) {
             {/* Right Column (4 cols): Hospital Location, Emergency, Related Doctors */}
             <div className="lg:col-span-4 space-y-8">
               
-              {/* Hospital Location & Emergency Block */}
+              {/* Hospital Location & Emergency Block (Geo NAP Grounding) */}
               <div className="p-6 rounded-2xl bg-[var(--cloud)] border border-[var(--mist)] shadow-xs space-y-5">
                 <div className="flex items-center gap-2">
                   <MapPin size={20} className="text-[var(--primary)]" aria-hidden="true" />
                   <h3 className="font-display font-bold text-lg text-[var(--navy-950)]">
-                    Consultation Location
+                    Chamber &amp; Practice Location
                   </h3>
                 </div>
 
                 <div className="space-y-2 text-sm text-[var(--slate)]">
-                  <p className="font-semibold text-[var(--navy-950)]">South City Hospital</p>
-                  <p>{hospital.location.address}</p>
-                  <p className="text-xs text-[var(--slate)]">Meherpur, Silchar, Cachar, Assam 788015</p>
+                  <p className="font-bold text-[var(--navy-950)]">South City Hospital, Silchar</p>
+                  <p className="text-xs text-[var(--slate)] leading-relaxed">
+                    Meherpur, Silchar, Cachar, Assam – 788015, India
+                  </p>
+                  <p className="text-[11px] text-[var(--slate)]/80 leading-snug">
+                    Situated on Silchar–Hailakandi Road. Accessible for patients traveling from Cachar, Hailakandi, Karimganj, and Barak Valley.
+                  </p>
                 </div>
+
+                <a
+                  href="https://www.google.com/maps/place/South+City+Hospital/@24.785576,92.7955732,17z"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-outline w-full text-xs py-2.5 px-3 gap-1.5 border-[var(--mist)] hover:border-[var(--primary)] bg-white text-[var(--navy-950)] hover:text-[var(--primary)] transition-colors flex items-center justify-center font-medium"
+                >
+                  <MapPin size={14} className="text-[var(--primary)]" />
+                  <span>View on Google Maps (Directions)</span>
+                </a>
 
                 <div className="p-4 rounded-xl bg-white border border-[var(--mist)] space-y-2">
                   <div className="flex items-center gap-2 text-[var(--emergency)] font-semibold text-xs uppercase tracking-wide">

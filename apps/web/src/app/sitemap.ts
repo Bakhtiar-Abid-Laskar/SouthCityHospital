@@ -3,6 +3,8 @@ import { SITE_URL } from "@/data/hospital";
 import { departments } from "@/data/departments";
 import { getAllPublishedDoctors } from "@/lib/doctors";
 
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = SITE_URL;
 
@@ -41,14 +43,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(),
   }));
 
-  // 3. Dynamic published doctor profile pages
+  // 3. Dynamic published doctor profile pages (Priority 0.9 for Google & Search Engines)
   let doctorRoutes: MetadataRoute.Sitemap = [];
   try {
     const publishedDoctors = await getAllPublishedDoctors();
     doctorRoutes = publishedDoctors.map((doc) => ({
       url: `${baseUrl}/doctors/${doc.slug}`,
-      changeFrequency: "weekly",
-      priority: 0.8,
+      changeFrequency: "daily",
+      priority: 0.9,
       lastModified: doc.updatedAt ? new Date(doc.updatedAt) : new Date(),
     }));
   } catch (err) {

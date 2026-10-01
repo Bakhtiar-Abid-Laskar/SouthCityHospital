@@ -1,8 +1,126 @@
 import { NextResponse } from "next/server";
+import fs from "fs";
+import path from "path";
 import { createClient } from "@supabase/supabase-js";
 import { requireAdmin } from "@/lib/auth/session";
 import type { Doctor } from "@sch/types";
 import { generateDoctorSlug } from "@sch/types";
+
+const DATA_FILE = path.resolve(process.cwd(), "..", "..", "data", "doctors.json");
+const LLMS_FILE = path.resolve(process.cwd(), "..", "web", "public", "llms.txt");
+
+function syncPublicLlmsTxt(doctors: any[]) {
+  try {
+    const activeDocs = doctors.filter((d) => d.active !== false);
+    let doctorMarkdown = "";
+    activeDocs.forEach((doc, idx) => {
+      const cleanName = (doc.name || "").replace(/\s+/g, " ").trim();
+      const displayName = cleanName.startsWith("Dr.") ? cleanName : `Dr. ${cleanName}`;
+      const qualStr =
+        doc.qualifications && doc.qualifications.length > 0
+          ? doc.qualifications.join(", ")
+          : "Consultant Physician";
+      const expStr =
+        doc.experienceYears > 0 ? `${doc.experienceYears}+ Years` : "Experienced Consultant";
+      const regStr = doc.registrationNumber
+        ? `\n   - Medical Registration No: ${doc.registrationNumber}`
+        : "";
+      const scheduleStr =
+        doc.consultationSchedule && doc.consultationSchedule.length > 0
+          ? doc.consultationSchedule
+              .map(
+                (s: any) =>
+                  `${s.day} (${s.startTime || "09:00"} – ${s.endTime || "13:00"})`
+              )
+              .join(", ")
+          : "Monday – Saturday (Hospital OPD Hours)";
+      const expertiseStr =
+        doc.expertise && doc.expertise.length > 0
+          ? `\n   - Clinical Focus: ${doc.expertise.join(", ")}`
+          : "";
+
+      doctorMarkdown += `${idx + 1}. **${displayName}** (${doc.departmentSlug || "Specialist"})
+   - Qualifications: ${qualStr}
+   - Clinical Experience: ${expStr}${regStr}
+   - OPD Schedule: ${scheduleStr}${expertiseStr}
+   - Profile URL: https://southcityhospital.in/doctors/${doc.slug}\n\n`;
+    });
+
+    const content = `# South City Hospital, Silchar — Public Information for LLM & AI Search Agents
+
+> South City Hospital is a premier multi-specialty healthcare institution in Meherpur, Silchar, Assam, serving the Barak Valley region (Cachar, Hailakandi, Karimganj) since 2006. This file provides authoritative context for generative AI search engines, language models, and agentic workflows.
+
+## Hospital Overview
+- **Name:** South City Hospital
+- **Legal Entity:** South City Hospital, Silchar
+- **Tagline:** We care with a difference
+- **Established:** 2006
+- **Managing Partner:** Nilava Mazumder
+- **Location:** Meherpur, Silchar, Assam – 788015, India
+- **Coordinates:** 24.785576° N, 92.7955732° E
+- **Google Maps:** https://www.google.com/maps/place/South+City+Hospital/@24.785576,92.7955732,17z
+- **Official Website:** https://southcityhospital.in
+- **Wikidata Geographic Grounding:**
+  - Silchar: https://www.wikidata.org/wiki/Q1025556
+  - Cachar: https://www.wikidata.org/wiki/Q42777
+  - Barak Valley: https://www.wikidata.org/wiki/Q2605553
+  - Assam: https://www.wikidata.org/wiki/Q1198
+
+## Emergency & 24/7 Critical Response
+- **24/7 Emergency & Trauma Hotline:** +91 6901271223 (Immediate medical response in Silchar)
+- **24/7 Ambulance Dispatch:** +91 6901271223
+- **General Hospital Reception:** +91 6901271223
+- **General Email:** southcityhospital2014@gmail.com
+- **Operating Hours:** Open 24 Hours / 7 Days a week for emergencies, critical care, pharmacy, and diagnostic services.
+
+## Specialist Doctor Directory (Authoritative URLs & OPD Timings)
+Patients and AI agents can query and cite individual specialist profiles directly:
+
+${doctorMarkdown.trim()}
+
+## Clinical Departments (13 Specialties)
+1. **Orthopaedics & Trauma:** https://southcityhospital.in/departments/orthopaedic-surgery
+2. **Urology & Laser Surgery:** https://southcityhospital.in/departments/urology-laser-surgery
+3. **Internal Medicine:** https://southcityhospital.in/departments/internal-medicine
+4. **Interventional Cardiology:** https://southcityhospital.in/departments/cardiology
+5. **Gynecology & Obstetrics:** https://southcityhospital.in/departments/gynecology-and-obst
+6. **Neuro Surgery:** https://southcityhospital.in/departments/neuro-surgery
+7. **Paediatrics & Neonatology:** https://southcityhospital.in/departments/paediatrics-neonatology
+8. **Nephrology & Dialysis:** https://southcityhospital.in/departments/nephrology
+9. **Gastroenterology:** https://southcityhospital.in/departments/gastroenterology
+10. **ENT (Otorhinolaryngology):** https://southcityhospital.in/departments/ent
+11. **General & Laparoscopic Surgery:** https://southcityhospital.in/departments/general-surgery
+12. **Dermatology:** https://southcityhospital.in/departments/dermatology
+13. **Medical Oncology & Palliative Care:** https://southcityhospital.in/departments/oncology
+
+## Diagnostic & Critical Care Facilities
+- Multi-Slice CT-Scan
+- Intensive Care Unit (ICU) & Coronary Care Unit (CCU)
+- Dedicated Hemodialysis Unit
+- High-Frequency Digital X-Ray & Color Doppler USG
+- Upper GI Endoscopy & Colonoscopy Suite
+- 24/7 Automated Clinical Pathology Laboratory
+- Laminar Flow Operation Theaters
+- 24/7 In-House Hospital Pharmacy
+- 24/7 Advanced Life Support Ambulance Fleet
+
+## Patient Appointment Booking Flow
+- **Direct Online Booking:** https://southcityhospital.in/doctors
+- **No Login Required:** Patients book with Name, Phone, Date of Birth, and desired OPD slot.
+- **Payment Policy:** No advance fee online; consultation fees are settled at hospital registration upon arrival.
+- **Confirmation Reference:** Instant reference ID (\`SCH-YYYY-XXXXX\`) generated with a downloadable PDF appointment slip.
+
+## Comprehensive LLM Knowledge Base
+- Full in-depth context file: https://southcityhospital.in/llms-full.txt
+`;
+
+    if (fs.existsSync(path.dirname(LLMS_FILE))) {
+      fs.writeFileSync(LLMS_FILE, content, "utf-8");
+    }
+  } catch (err) {
+    console.warn("Could not sync public/llms.txt:", err);
+  }
+}
 
 function getAnonSupabaseClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -20,6 +138,74 @@ function getServiceSupabaseClient() {
     return null;
   }
   return createClient(url, key);
+}
+
+function syncDoctorToLocalJson(doctor: Doctor) {
+  try {
+    let list: any[] = [];
+    if (fs.existsSync(DATA_FILE)) {
+      const raw = fs.readFileSync(DATA_FILE, "utf-8");
+      list = JSON.parse(raw) || [];
+    }
+    const idx = list.findIndex((d) => d.id === doctor.id);
+    if (idx >= 0) {
+      list[idx] = { ...list[idx], ...doctor };
+    } else {
+      list.unshift(doctor);
+    }
+    fs.writeFileSync(DATA_FILE, JSON.stringify(list, null, 2), "utf-8");
+    syncPublicLlmsTxt(list);
+  } catch (err) {
+    console.warn("Could not sync doctor to data/doctors.json backup:", err);
+  }
+}
+
+function syncRemoveDoctorFromLocalJson(id: string, removeAll = false) {
+  try {
+    if (removeAll) {
+      fs.writeFileSync(DATA_FILE, "[]", "utf-8");
+      syncPublicLlmsTxt([]);
+      return;
+    }
+    if (fs.existsSync(DATA_FILE)) {
+      const raw = fs.readFileSync(DATA_FILE, "utf-8");
+      let list: any[] = JSON.parse(raw) || [];
+      list = list.filter((d) => d.id !== id);
+      fs.writeFileSync(DATA_FILE, JSON.stringify(list, null, 2), "utf-8");
+      syncPublicLlmsTxt(list);
+    }
+  } catch (err) {
+    console.warn("Could not remove doctor from data/doctors.json backup:", err);
+  }
+}
+
+async function triggerWebRevalidation(payload: {
+  tag?: string;
+  path?: string;
+  slug?: string;
+  departmentSlug?: string;
+}) {
+  try {
+    const webUrl =
+      process.env.WEB_APP_URL || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+    const token =
+      process.env.REVALIDATION_SECRET_TOKEN || "sch_revalidation_secret_2026_silchar";
+
+    const res = await fetch(`${webUrl}/api/revalidate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      console.warn("Web cache revalidation responded with status:", res.status);
+    }
+  } catch (err) {
+    console.warn("Could not dispatch web cache revalidation:", err);
+  }
 }
 
 export async function GET(request: Request) {
@@ -49,8 +235,16 @@ export async function GET(request: Request) {
           active: d.active ?? true,
           consultationSchedule: d.consultation_schedule || [],
           biography: d.biography || null,
+          bio: d.biography || null,
           languages: d.languages || ["English", "Bengali", "Hindi"],
           registrationNumber: d.registration_number || "PENDING",
+          slug: d.slug || null,
+          expertise: d.expertise || [],
+          education: d.education || [],
+          faqs: d.faqs || [],
+          seoTitle: d.seo_title || null,
+          seoDescription: d.seo_description || null,
+          updatedAt: d.updated_at || d.created_at,
         }));
         return NextResponse.json({ success: true, doctors: mapped });
       }
@@ -118,8 +312,14 @@ export async function POST(request: Request) {
         if (doctorSlug) {
           payload.slug = doctorSlug;
         }
-        if (doctor.expertise && doctor.expertise.length > 0) {
+        if (doctor.expertise && Array.isArray(doctor.expertise)) {
           payload.expertise = doctor.expertise;
+        }
+        if (doctor.education && Array.isArray(doctor.education)) {
+          payload.education = doctor.education;
+        }
+        if (doctor.faqs && Array.isArray(doctor.faqs)) {
+          payload.faqs = doctor.faqs;
         }
         if (doctor.seoTitle) {
           payload.seo_title = doctor.seoTitle;
@@ -132,10 +332,11 @@ export async function POST(request: Request) {
 
         if (error) {
           console.warn("Supabase upsert error:", error);
-          // If error is about missing 'slug' column in un-migrated DB, retry without slug
           if (error.message?.includes("slug")) {
             delete payload.slug;
             delete payload.expertise;
+            delete payload.education;
+            delete payload.faqs;
             delete payload.seo_title;
             delete payload.seo_description;
             await supabase.from("doctors").upsert(payload);
@@ -144,11 +345,27 @@ export async function POST(request: Request) {
           }
         }
 
-      } catch (err) {
+        const completeDoc: Doctor = {
+          ...doctor,
+          slug: doctorSlug,
+        };
+
+        // 2. Automatically sync to local data/doctors.json backup
+        syncDoctorToLocalJson(completeDoc);
+
+        // 3. Immediately revalidate web cache
+        triggerWebRevalidation({
+          tag: "doctors",
+          path: "/doctors",
+          slug: doctorSlug,
+          departmentSlug: doctor.departmentSlug,
+        });
+
+        return NextResponse.json({ success: true, doctor: completeDoc });
+      } catch (err: any) {
         console.warn("Exception in POST /api/doctors:", err);
         return NextResponse.json({ success: false, error: "Failed to upsert doctor." }, { status: 500 });
       }
-      return NextResponse.json({ success: true, doctor });
     }
 
     return NextResponse.json(
@@ -197,6 +414,8 @@ export async function DELETE(request: Request) {
           console.warn("Exception during purge:", err);
         }
       }
+      syncRemoveDoctorFromLocalJson("", true);
+      triggerWebRevalidation({ tag: "doctors", path: "/doctors" });
       return NextResponse.json({ success: true, message: "All doctors deleted." });
     }
 
@@ -215,6 +434,9 @@ export async function DELETE(request: Request) {
         console.warn("Exception during delete:", err);
       }
     }
+
+    syncRemoveDoctorFromLocalJson(id);
+    triggerWebRevalidation({ tag: "doctors", path: "/doctors" });
 
     return NextResponse.json({ success: true, message: `Doctor ${id} deleted.` });
   } catch (err: any) {

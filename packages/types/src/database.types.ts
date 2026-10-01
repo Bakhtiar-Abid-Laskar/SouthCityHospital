@@ -51,6 +51,8 @@ export interface Database {
           updated_at: string;
           slug?: string | null;
           expertise?: string[] | null;
+          education?: Json;
+          faqs?: Json;
           seo_title?: string | null;
           seo_description?: string | null;
         };
@@ -69,6 +71,8 @@ export interface Database {
           updated_at?: string;
           slug?: string | null;
           expertise?: string[] | null;
+          education?: Json;
+          faqs?: Json;
           seo_title?: string | null;
           seo_description?: string | null;
         };
@@ -87,6 +91,8 @@ export interface Database {
           updated_at?: string;
           slug?: string | null;
           expertise?: string[] | null;
+          education?: Json;
+          faqs?: Json;
           seo_title?: string | null;
           seo_description?: string | null;
         };
