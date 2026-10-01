@@ -441,7 +441,7 @@ export default function AdminDoctorsPage() {
                         </span>
                         {doc.slug && (
                           <a
-                            href={`http://localhost:3000/doctors/${doc.slug}`}
+                            href={`${process.env.NEXT_PUBLIC_SITE_URL || "https://southcityhospital.in"}/doctors/${doc.slug}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-[var(--primary)] hover:underline inline-flex items-center gap-1 font-semibold shrink-0"

@@ -5,7 +5,8 @@ import type { Doctor, DoctorFilterParams } from "@sch/types";
 
 export async function fetchDoctors(params?: DoctorFilterParams): Promise<Doctor[]> {
   try {
-    const url = new URL("/api/doctors", typeof window !== "undefined" ? window.location.origin : "http://localhost:4000");
+    const fallbackOrigin = process.env.NEXT_PUBLIC_ADMIN_URL || "https://internaladmin.southcityhospital.in";
+    const url = new URL("/api/doctors", typeof window !== "undefined" ? window.location.origin : fallbackOrigin);
     if (params?.departmentSlug && params.departmentSlug !== "all") {
       url.searchParams.set("departmentSlug", params.departmentSlug);
     }

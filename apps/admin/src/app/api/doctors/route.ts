@@ -187,7 +187,7 @@ async function triggerWebRevalidation(payload: {
 }) {
   try {
     const webUrl =
-      process.env.WEB_APP_URL || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+      process.env.WEB_APP_URL || process.env.NEXT_PUBLIC_SITE_URL || "https://southcityhospital.in";
     const token =
       process.env.REVALIDATION_SECRET_TOKEN || "sch_revalidation_secret_2026_silchar";
 
