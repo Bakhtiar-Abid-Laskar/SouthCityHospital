@@ -89,16 +89,16 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon-32x32.png?v=20261001c", sizes: "32x32", type: "image/png" },
-      { url: "/favicon-16x16.png?v=20261001c", sizes: "16x16", type: "image/png" },
-      { url: "/favicon.ico?v=20261001c", sizes: "any" },
-      { url: "/icon-192.png?v=20261001c", sizes: "192x192", type: "image/png" },
-      { url: "/icon-512.png?v=20261001c", sizes: "512x512", type: "image/png" },
+      { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
     ],
+    shortcut: "/favicon.ico",
     apple: [
-      { url: "/apple-touch-icon.png?v=20261001c", sizes: "180x180", type: "image/png" },
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
-    shortcut: "/favicon.ico?v=20261001c",
   },
   manifest: "/manifest.webmanifest",
 };

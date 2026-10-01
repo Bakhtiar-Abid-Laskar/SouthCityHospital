@@ -36,6 +36,21 @@ export default function robots(): MetadataRoute.Robots {
         ],
         disallow: ["/api/", "/admin/", "/staff/", "/booking-status"],
       },
+      {
+        userAgent: ["Google Favicon", "Googlebot-Image"],
+        allow: [
+          "/favicon.ico",
+          "/favicon-48x48.png",
+          "/favicon-32x32.png",
+          "/favicon-16x16.png",
+          "/icon-192.png",
+          "/icon-512.png",
+          "/apple-touch-icon.png",
+          "/favicon.svg",
+          "/logo.jpg",
+          "/logo.webp",
+        ],
+      },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
   };
